@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://webs-star.github.io/realestate.com/sitemap.xml
