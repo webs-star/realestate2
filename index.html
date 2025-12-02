@@ -1,20 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Real Estate Marketplace</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="google-site-verification" content="ZuK2pvozDS96vm0_IRjSYEsTqSdC8FJCIgJdAitGf0U" />
-  <meta name="description" content="Use the RealPlot customer map to discover land and rental properties in Kenya. Apply filters and get voice-guided directions instantly." />
-  <meta name="keywords" content="real estate Kenya, land map Kenya, property listings, rentals, voice directions, RealPlot Connect, property map" />
-  <meta name="author" content="RealPlot Connect by Webs Star" />
-  <meta name="robots" content="index, follow" />
-  <meta property="og:title" content="RealPlot Connect – Customer Property Finder" />
-  <meta property="og:description" content="Discover land, rentals, and houses near you using RealPlot’s live map. Voice-guided directions and filtering included." />
-  <meta property="og:url" content="https://webs-star.github.io/realestate.com/customers.html" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://your-site-preview-image.jpg" />
-  <link rel="icon" href="favicon.ico" />
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ 
+ <meta name="google-site-verification" content="U5XTc52kcwPqUunl-p9uagUoK3-O9wwGZhr7G1fL2bo" />
+  <!-- Title and SEO -->
+<title>RealPlot Kenya – Find Plots, Houses & Rentals Near You</title>
+
+<meta name="description" content="Discover affordable plots, houses, and rentals across Kenya with RealPlot Connect. Use the live map to search by location, apply filters, and get real-time voice-guided directions to properties near you." />
+
+<meta name="keywords" content="plots for sale Kenya, houses for rent Kenya, cheap rentals Kenya, buy land Kenya, affordable property Kenya, real estate Kenya, rental listings Kenya, property map Kenya, Mtwapa plots, Nairobi rentals, land for sale Mombasa, apartments Kenya, homes for sale Kenya, RealPlot Connect" />
+
+<meta name="author" content="RealPlot Connect by Webs Star" />
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<link rel="canonical" href="https://webs-star.github.io/realestate.com/customers.html" />
+
+<!-- Open Graph / Social Preview -->
+<meta property="og:title" content="RealPlot Kenya – Explore Plots, Houses & Rentals Near You" />
+<meta property="og:description" content="Browse and find verified properties across Kenya. RealPlot Connect helps customers search, view, and navigate to land and rentals easily with voice-guided map access." />
+<meta property="og:url" content="https://webs-star.github.io/realestate.com/customers.html" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_KE" />
+<meta property="og:image" content="https://your-site-preview-image.jpg" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="RealPlot Kenya – Discover Plots, Rentals & Houses for Sale" />
+<meta name="twitter:description" content="Find affordable plots and rentals across Kenya using RealPlot’s live property map with filters and voice-guided directions." />
+<meta name="twitter:image" content="https://your-site-preview-image.jpg" />
+
+<!-- Geo Tags for Local SEO -->
+<meta name="geo.region" content="KE" />
+<meta name="geo.placename" content="Kenya" />
+<meta name="geo.position" content="-1.2921;36.8219" />
+<meta name="ICBM" content="-1.2921,36.8219" />
+
+<!-- Schema.org JSON-LD for Rich Search Results -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "RealPlot Connect – Property Finder Kenya",
+  "url": "https://webs-star.github.io/realestate.com/customers.html",
+  "description": "A free property finder tool in Kenya to discover plots, land, and rentals with map navigation and voice-guided directions.",
+  "applicationCategory": "RealEstateApplication",
+  "operatingSystem": "All",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Webs Star"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KES"
+  },
+  "areaServed": "KE",
+  "inLanguage": "en"
+}
+</script>
+
+<link rel="icon" href="favicon.ico" />
+
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -119,7 +166,16 @@ ul.description {
 }
 
  
-   
+    .bold-info {
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+
+  .type    { color: #007BFF; }  /* Blue */
+  .purpose { color: #28A745; }  /* Green */
+  .location { color: #6F42C1; } /* Purple */
+  .price   { color: #DC3545; }  /* Red */
+  .contact { color: #FFC107; } /* Yellow/Orange */
   </style>
 </head>
 <body>
@@ -148,7 +204,19 @@ ul.description {
       <option value="industrial">Industrial Property</option>
       <option value="resort">Resort / Hotel</option>
     </select>
-     <select id="filterLocation">
+    
+    
+<select id="filterPurpose">
+  <option value="">All Purposes</option>
+  <option value="sale">For Sale</option>
+  <option value="rent">For Rent</option>
+  <option value="lease">For Lease</option>
+  <option value="bnb">For BnB</option>
+</select>
+
+    
+    
+    <select id="filterLocation">
       <option value="">All Counties</option>
       <option value="Mombasa">Mombasa</option><option value="Kwale">Kwale</option><option value="Kilifi">Kilifi</option><option value="Tana River">Tana River</option><option value="Lamu">Lamu</option><option value="Taita-Taveta">Taita-Taveta</option><option value="Garissa">Garissa</option><option value="Wajir">Wajir</option><option value="Mandera">Mandera</option><option value="Marsabit">Marsabit</option><option value="Isiolo">Isiolo</option><option value="Meru">Meru</option><option value="Tharaka-Nithi">Tharaka-Nithi</option><option value="Embu">Embu</option><option value="Kitui">Kitui</option><option value="Machakos">Machakos</option><option value="Makueni">Makueni</option><option value="Nyandarua">Nyandarua</option><option value="Nyeri">Nyeri</option><option value="Kirinyaga">Kirinyaga</option><option value="Murang'a">Murang'a</option><option value="Kiambu">Kiambu</option><option value="Turkana">Turkana</option><option value="West Pokot">West Pokot</option><option value="Samburu">Samburu</option><option value="Trans Nzoia">Trans Nzoia</option><option value="Uasin Gishu">Uasin Gishu</option><option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option><option value="Nandi">Nandi</option><option value="Baringo">Baringo</option><option value="Laikipia">Laikipia</option><option value="Nakuru">Nakuru</option><option value="Narok">Narok</option><option value="Kajiado">Kajiado</option><option value="Kericho">Kericho</option><option value="Bomet">Bomet</option><option value="Kakamega">Kakamega</option><option value="Vihiga">Vihiga</option><option value="Bungoma">Bungoma</option><option value="Busia">Busia</option><option value="Siaya">Siaya</option><option value="Kisumu">Kisumu</option><option value="Homa Bay">Homa Bay</option><option value="Migori">Migori</option><option value="Kisii">Kisii</option><option value="Nyamira">Nyamira</option><option value="Nairobi">Nairobi</option>
     </select>
@@ -189,6 +257,7 @@ ul.description {
   const filterLocation = document.getElementById("filterLocation").value;
   const minPrice = parseInt(document.getElementById("minPrice").value) || 0;
   const maxPrice = parseInt(document.getElementById("maxPrice").value) || Infinity;
+   const filterPurpose = document.getElementById("filterPurpose").value.toLowerCase().trim();
 
   db.ref("listings").once("value", snapshot => {
     const data = snapshot.val();
@@ -206,72 +275,100 @@ ul.description {
       return tB - tA; // newest first
     });
  for (const [id, item] of sortedEntries) {
-  const itemType = (item.type || "").toLowerCase().trim();
-  const itemLocation = (item.location || "").toLowerCase().trim();
-  const filterTypeVal = filterType.toLowerCase().trim();
-  const filterLoc = filterLocation.toLowerCase().trim();
+ const itemType = (item.type || "").toLowerCase().trim();
+const itemLocation = (item.location || "").toLowerCase().trim();
+const itemPurpose = (item.purpose || "").toLowerCase().trim(); // ✅ only once
 
-  // Match any word in location (e.g., "lamu mpeketoni" should match "lamu" or "mpeketoni")
-  const itemLocationWords = itemLocation.split(/[\s,-]+/); // splits on space, comma, or dash
-  const filterWords = filterLoc.split(/[\s,-]+/);
+const filterTypeVal = filterType.toLowerCase().trim();
 
-  const locationMatch = filterLoc === "" || filterWords.some(word =>
-    itemLocationWords.includes(word)
-  );
+const filterLoc = filterLocation.toLowerCase().trim();
 
-  const typeMatch = filterType === "" || itemType.includes(filterTypeVal);
-  const priceMatch = item.price >= minPrice && item.price <= maxPrice;
+const itemLocationWords = itemLocation.split(/[\s,-]+/);
+const filterWords = filterLoc.split(/[\s,-]+/);
 
-  if (!locationMatch || !typeMatch || !priceMatch) continue;
+const locationMatch = filterLoc === "" || filterWords.some(word =>
+  itemLocationWords.includes(word)
+);
+const typeMatch = filterType === "" || itemType.includes(filterTypeVal);
+const purposeMatch = filterPurpose === "" || itemPurpose === filterPurpose;
+
+const priceMatch = item.price >= minPrice && item.price <= maxPrice;
+
+if (!typeMatch || !purposeMatch || !locationMatch || !priceMatch) continue;
+
 
   // Continue with rendering the card...
 
 
 
+const card = document.createElement("div");
+card.className = "listing-card";
+card.innerHTML = `
+  <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
+  <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
+  <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
+  <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
 
-      const card = document.createElement("div");
-card.className = "listing-card"; // <-- Add this line
-      card.innerHTML = `
-         <p><strong>Type:</strong> <span class="bold-info">${item.type}</span></p>
-  <p><strong>Location:</strong> ${item.location}</p>
-  <p><strong>Price:</strong> <span class="bold-info">KES ${item.price}</span></p>
- 
- <ul class="description">
-  ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
-</ul>
- 
- 
-  <p><strong>Contact:</strong> ${item.contact}</p>
-      `;
+  <ul class="description">
+    ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
+  </ul>
 
-      const imageArray = Array.isArray(item.images) ? item.images : [];
-      if (imageArray.length > 0) {
-        imageArray.forEach(url => {
-          const img = document.createElement("img");
-          img.src = url;
-          img.className = "property";
-          card.appendChild(img);
-        });
-      }
+  <p><strong>Contact:</strong> <span class="bold-info contact">${item.contact}</span></p>
+`;
 
-      const mapId = "map-" + id;
-      const btn = document.createElement("button");
-      btn.textContent = "📍 Show Directions";
-      btn.onclick = () => showMapForListing(item.lat, item.lng, mapId);
+     
+const imageArray = Array.isArray(item.images) ? item.images : [];
+if (imageArray.length > 0) {
+  const img = document.createElement("img");
+  img.src = imageArray[0];
+  img.className = "property";
+  img.style.transition = "opacity 0.5s ease-in-out";
+  card.appendChild(img);
 
-      const mapDiv = document.createElement("div");
-      mapDiv.id = mapId;
+  let index = 0;
+  setInterval(() => {
+    index = (index + 1) % imageArray.length;
+    img.style.opacity = 0;
+    setTimeout(() => {
+      img.src = imageArray[index];
+      img.style.opacity = 1;
+   }, 500);
+  }, 5000); // 5 seconds
+}
 
-      card.appendChild(btn);
-      card.appendChild(mapDiv);
-      listingsDiv.appendChild(card);
+
+
+     const mapId = "map-" + id;
+
+// Show Directions button
+const btn = document.createElement("button");
+btn.textContent = "📍 Show Directions";
+btn.onclick = () => showMapForListing(item.lat, item.lng, mapId);
+
+// Chat button
+const chatBtn = document.createElement("button");
+chatBtn.textContent = "💬 Chat with Landlord/Landowner/Agent";
+chatBtn.style.background = "#ff9800";
+chatBtn.style.color = "white";
+chatBtn.style.marginTop = "5px";
+chatBtn.style.borderRadius = "5px";
+chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
+// Map container
+const mapDiv = document.createElement("div");
+mapDiv.id = mapId;
+
+// Append to card
+card.appendChild(btn);
+card.appendChild(chatBtn); // ✅ new chat button
+card.appendChild(mapDiv);
+listingsDiv.appendChild(card);
+
     }
   });
 }
 
 
-
-  function showMapForListing(destLat, destLng, containerId) {
+function showMapForListing(destLat, destLng, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = "";
 
@@ -287,50 +384,181 @@ card.className = "listing-card"; // <-- Add this line
     directionsList.style.padding = "10px";
     directionsList.style.background = "#f9f9f9";
     directionsList.style.borderRadius = "8px";
-    directionsList.innerHTML = "<strong>Directions:</strong><br><em>Loading...</em>";
+    // ⭐ Initial message changed to show the long wait time
+    directionsList.innerHTML = "<strong>Directions:</strong><br><em>Acquiring location... (This may take up to 20 seconds on mobile data)</em>";
     container.appendChild(directionsList);
 
-    const map = L.map(mapDiv).setView([destLat, destLng], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    const destinationLatLng = L.latLng(destLat, destLng);
+    
+    let map = null;
+    let userMarker = null;
+    let routeControl = null;
+    let straightLine = null;
+    
+    // --- STEP 1: Define the Routing Logic ---
 
-    if (!currentUserLatLng) {
-      alert("Please allow location access to show directions.");
-      return;
+    function createRoute(userLatLng) {
+        // Cleanup previous layers
+        if (routeControl) { map.removeControl(routeControl); routeControl = null; }
+        if (straightLine) { map.removeLayer(straightLine); straightLine = null; }
+
+        directionsList.innerHTML = "<strong>Directions:</strong><br><em>Calculating best road route...</em>";
+
+        // Create the road routing control
+        routeControl = L.Routing.control({
+            waypoints: [userLatLng, destinationLatLng],
+            routeWhileDragging: false,
+            addWaypoints: false,
+            createMarker: () => null,
+            show: false,
+            lineOptions: {
+                styles: [{ color: 'blue', weight: 4, opacity: 0.8 }]
+            }
+        }).addTo(map);
+
+        // --- Routing Error Handler (The critical fallback) ---
+        routeControl.on('routingerror', function (e) {
+            console.error("Road Routing Error:", e.error);
+            
+            // Immediately trigger straight-line fallback on failure
+            straightLineFallback(userLatLng);
+        });
+
+        // --- Routing Success Handler ---
+        routeControl.on('routesfound', function (e) {
+            const route = e.routes[0];
+            const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
+            const timeMin = (route.summary.totalTime / 60).toFixed(0);
+
+            let steps = `<strong>Live Step-by-Step Directions:</strong><br>`;
+            const instructions = route.instructions || [];
+
+            const formatter = new L.Routing.Formatter();
+            if (instructions.length === 0 && route.instructions === undefined) {
+                route.instructions = formatter._getInstructions.call({options:{}}, route);
+            }
+
+            for (const step of route.instructions || []) {
+                if (step.text) {
+                    steps += `➡️ ${step.text} (${(step.distance / 1000).toFixed(2)} km)<br>`;
+                }
+            }
+
+            steps += `<br><em>Total Distance:</em> **${distanceKm} km**<br>`;
+            steps += `<em>Estimated Time:</em> **${timeMin} mins**`;
+
+            directionsList.innerHTML = steps;
+        });
     }
 
-    L.marker([destLat, destLng]).addTo(map).bindPopup("Listing Location").openPopup();
+    function straightLineFallback(userLatLng) {
+        // Fallback cleanup (in case an error occurred mid-route draw)
+        if (routeControl) { map.removeControl(routeControl); routeControl = null; }
+        
+        const distanceToDestination = userLatLng.distanceTo(destinationLatLng);
+        
+        // Draw the straight line
+        straightLine = L.polyline([userLatLng, destinationLatLng], {
+            color: 'red', 
+            weight: 3, 
+            dashArray: '10, 10', 
+            opacity: 0.8
+        }).addTo(map);
 
-    const control = L.Routing.control({
-      waypoints: [currentUserLatLng, L.latLng(destLat, destLng)],
-      routeWhileDragging: false,
-      addWaypoints: false,
-      createMarker: () => null,
-      show: false,
-      lineOptions: {
-        styles: [{ color: 'blue', weight: 4, opacity: 0.8 }]
-      }
-    }).addTo(map);
+        directionsList.innerHTML = `
+            ❌ <strong>Road Route Failed!</strong><br>
+            Showing **Straight Line Distance:** **${(distanceToDestination / 1000).toFixed(2)} km** (${distanceToDestination.toFixed(0)}m)<br>
+            <em>This often happens due to a poor 3G/4G signal. You must navigate the rest of the way manually.</em>
+        `;
+    }
 
-    control.on('routesfound', function (e) {
-      const routes = e.routes[0];
-      let steps = "<strong>Directions:</strong><br>";
-      routes.instructions = routes.instructions || [];
+    // --- STEP 2: Acquire Location (Using Single, Robust Request) ---
 
-      routes.instructions = routes.instructions.length > 0
-        ? routes.instructions
-        : L.Routing.Formatter.prototype._getInstructions.call({options: {}}, routes);
+    // We use getCurrentPosition instead of watchPosition for one stable fix.
+    navigator.geolocation.getCurrentPosition(
+        pos => {
+            const userLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude);
+            const accuracyMeters = pos.coords.accuracy;
 
-      for (const instr of routes.instructions) {
-        if (instr.text) steps += `→ ${instr.text}<br>`;
-      }
+            // 1. Initialize the map now that we have a location
+            map = L.map(mapDiv).setView(userLatLng, 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-      steps += `<br><em>Distance:</em> ${(routes.summary.totalDistance / 1000).toFixed(2)} km<br>`;
-      steps += `<em>Estimated Time:</em> ${(routes.summary.totalTime / 60).toFixed(0)} mins`;
-      directionsList.innerHTML = steps;
-    });
-  }
+            L.marker(destinationLatLng).addTo(map).bindPopup("Listing Location");
 
-  window.onload = loadListings;
+            // 2. Add User Marker
+            userMarker = L.marker(userLatLng, {
+                icon: L.icon({
+                    iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+                    iconSize: [25, 25],
+                    iconAnchor: [12, 12]
+                })
+            }).addTo(map).bindPopup(`You are here (Accuracy: ${accuracyMeters.toFixed(0)}m)`);
+            
+            // 3. Immediately attempt road routing
+            createRoute(userLatLng);
+
+            // 4. Implement a simple watching logic for updates (optional but helpful)
+            // This re-attempts the route every 30 seconds if successful
+            setInterval(() => {
+                navigator.geolocation.getCurrentPosition(
+                    updatePos => {
+                        const updatedLatLng = L.latLng(updatePos.coords.latitude, updatePos.coords.longitude);
+                        userMarker.setLatLng(updatedLatLng).bindPopup(`Updated Location (Acc: ${updatePos.coords.accuracy.toFixed(0)}m)`);
+                        map.panTo(updatedLatLng);
+                        
+                        // Only re-route if accuracy is decent (e.g., < 150m) to avoid errors
+                        if (updatePos.coords.accuracy < 150) {
+                            createRoute(updatedLatLng);
+                        } else {
+                            straightLineFallback(updatedLatLng); // Fallback if update is poor
+                        }
+                    },
+                    () => { /* ignore update errors */ },
+                    { enableHighAccuracy: false, timeout: 10000 }
+                );
+            }, 30000); // Check for location update every 30 seconds
+
+        },
+        err => {
+            // Geolocation Failure (Failed to get location within 20s)
+            directionsList.innerHTML = `
+                ❌ <strong>Location Tracking Failed!</strong><br>
+                **Error:** ${err.message}. Failed to get position within 20 seconds.
+                <br><em>Please check if location services are enabled or try moving to an open area.</em>
+            `;
+        },
+        {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            // ⭐ Final attempt at a long timeout for 3G/4G
+            timeout: 20000 
+        }
+    );
+}
+window.onload = () => {
+  loadListings();
+};
+
+
+function openChat(contact, location, type, listingId) {
+  const message = prompt(`💬 Start chatting with the landlord of this ${type} in ${location}.\n\nType your message below:`);
+
+  if (!message) return;
+
+  const phoneNumber = contact.replace(/\D/g, '');
+
+  const linkToListing = `https://webs-star.github.io/realestate.com/customers.html?listing=${listingId}`;
+
+  const preFilled = `Hello, I'm interested in the ${type} located in ${location}. I saw your listing on *RealPlot Connect*.\n\n${message}\n\n🔗 View listing: ${linkToListing}`;
+  const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(preFilled)}`;
+
+  window.open(whatsappURL, "_blank");
+}
+
+
+
+  
 </script>
 
 </body>
