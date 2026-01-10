@@ -125,6 +125,16 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+
+function getPayAmount(item) {
+  if (item.price <= 10000) return 50;
+  if (item.price <= 20000) return 100;
+  return 200; // above 20,000
+}
+
+
+
+
 function loadListings() {
   const filterType = document.getElementById("filterType").value.toLowerCase().trim();
   const filterLocation = document.getElementById("filterLocation").value.toLowerCase().trim();
@@ -188,16 +198,28 @@ function loadListings() {
         }, 5000);
       }
 
-      // ✅ Pay button
+      // Pay button with correct amount
+      const payAmount = getPayAmount(item);
       const payBtn = document.createElement("button");
-      payBtn.textContent = "🔓 Pay KES 200 to Contact Owner";
+      payBtn.textContent = `🔓 Pay KES ${payAmount} to Contact Owner`;
       payBtn.style.background = "#0aa83f";
       payBtn.style.color = "white";
       payBtn.style.marginTop = "8px";
       payBtn.style.borderRadius = "6px";
       payBtn.style.fontWeight = "bold";
       payBtn.onclick = () => {
-        window.location.href = "https://paystack.shop/pay/y9rwwamyj9";
+        // Replace with dynamic Paystack link if needed
+        const paymentWindow = window.open("https://paystack.shop/pay/y9rwwamyj9", "_blank");
+
+        const checkPayment = setInterval(() => {
+          if (paymentWindow.closed) {
+            clearInterval(checkPayment);
+            const contactEl = document.createElement("p");
+            contactEl.innerHTML = `<strong>Contact Owner:</strong> <span class="bold-info contact">${item.contact}</span>`;
+            card.appendChild(contactEl);
+            payBtn.remove();
+          }
+        }, 1000);
       };
       card.appendChild(payBtn);
 
@@ -206,7 +228,6 @@ function loadListings() {
   });
 }
 
-// Load listings on page load
 window.onload = () => { loadListings(); };
 </script>
 
