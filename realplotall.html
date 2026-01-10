@@ -125,16 +125,51 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+
 // Return both amount and Paystack link based on price
 function getPaymentDetails(item) {
-  if (item.price <= 10000) {
+  const price = Number(item.price) || 0;
+
+  if (price <= 10000) {
     return { amount: 50, link: "https://paystack.shop/pay/y9rwwamyj9" };
-  } 
-  if (item.price <= 20000) {
+  }
+
+  if (price <= 20000) {
     return { amount: 100, link: "https://paystack.shop/pay/nzegf3v7-4" };
   }
-  return { amount: 200, link: "https://paystack.shop/pay/v-8yf5w823" };
+
+  if (price <= 100000) {
+    return { amount: 150, link: "https://paystack.shop/pay/v-8yf5w823" };
+  }
+
+  if (price <= 500000) {
+    return { amount: 200, link: "https://paystack.shop/pay/v-8yf5w823" };
+  }
+
+  if (price <= 1000000) {
+    return { amount: 250, link: "https://paystack.shop/pay/v-8yf5w823" };
+  }
+
+  if (price <= 5000000) {
+    return { amount: 300, link: "https://paystack.shop/pay/v-8yf5w823" };
+  }
+
+  if (price <= 10000000) {
+    return { amount: 350, link: "https://paystack.shop/pay/v-8yf5w823" };
+  }
+
+  if (price <= 20000000) {
+    return { amount: 350, link: "https://paystack.shop/pay/v-8yf5w823" };
+  }
+
+  if (price <= 50000000) {
+    return { amount: 400, link: "https://paystack.shop/pay/v-8yf5w823" };
+  }
+
+  return { amount: 500, link: "https://paystack.shop/pay/v-8yf5w823" };
 }
+
+
 
 
 
@@ -234,6 +269,9 @@ card.appendChild(payBtn);
 
 window.onload = () => { loadListings(); };
 </script>
+
+
+
 
 
 
