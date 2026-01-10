@@ -125,13 +125,16 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-
-function getPayAmount(item) {
-  if (item.price <= 10000) return 50;
-  if (item.price <= 20000) return 100;
-  return 200; // above 20,000
+// Return both amount and Paystack link based on price
+function getPaymentDetails(item) {
+  if (item.price <= 10000) {
+    return { amount: 50, link: "https://paystack.shop/pay/y9rwwamyj9" };
+  } 
+  if (item.price <= 20000) {
+    return { amount: 100, link: "https://paystack.shop/pay/nzegf3v7-4" };
+  }
+  return { amount: 200, link: "https://paystack.shop/pay/v-8yf5w823" };
 }
-
 
 
 
@@ -198,30 +201,31 @@ function loadListings() {
         }, 5000);
       }
 
-      // Pay button with correct amount
-      const payAmount = getPayAmount(item);
-      const payBtn = document.createElement("button");
-      payBtn.textContent = `🔓 Pay KES ${payAmount} to Contact Owner`;
-      payBtn.style.background = "#0aa83f";
-      payBtn.style.color = "white";
-      payBtn.style.marginTop = "8px";
-      payBtn.style.borderRadius = "6px";
-      payBtn.style.fontWeight = "bold";
-      payBtn.onclick = () => {
-        // Replace with dynamic Paystack link if needed
-        const paymentWindow = window.open("https://paystack.shop/pay/y9rwwamyj9", "_blank");
+      // Get amount and link for this listing
+const payment = getPaymentDetails(item);
 
-        const checkPayment = setInterval(() => {
-          if (paymentWindow.closed) {
-            clearInterval(checkPayment);
-            const contactEl = document.createElement("p");
-            contactEl.innerHTML = `<strong>Contact Owner:</strong> <span class="bold-info contact">${item.contact}</span>`;
-            card.appendChild(contactEl);
-            payBtn.remove();
-          }
-        }, 1000);
-      };
-      card.appendChild(payBtn);
+const payBtn = document.createElement("button");
+payBtn.textContent = `🔓 Pay KES ${payment.amount} to Contact Owner`;
+payBtn.style.background = "#0aa83f";
+payBtn.style.color = "white";
+payBtn.style.marginTop = "8px";
+payBtn.style.borderRadius = "6px";
+payBtn.style.fontWeight = "bold";
+payBtn.onclick = () => {
+  const paymentWindow = window.open(payment.link, "_blank");
+
+  const checkPayment = setInterval(() => {
+    if (paymentWindow.closed) {
+      clearInterval(checkPayment);
+      const contactEl = document.createElement("p");
+      contactEl.innerHTML = `<strong>Contact Owner:</strong> <span class="bold-info contact">${item.contact}</span>`;
+      card.appendChild(contactEl);
+      payBtn.remove();
+    }
+  }, 1000);
+};
+card.appendChild(payBtn);
+
 
       listingsDiv.appendChild(card);
     }
@@ -230,6 +234,7 @@ function loadListings() {
 
 window.onload = () => { loadListings(); };
 </script>
+
 
 
 
