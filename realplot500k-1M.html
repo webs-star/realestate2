@@ -595,7 +595,7 @@ function openChat(contact, location, type, listingId) {
 
   const phoneNumber = contact.replace(/\D/g, '');
 
-  const linkToListing = `https://webs-star.github.io/realestate.com/customers.html?listing=${listingId}`;
+  const linkToListing = `https://webs-star.github.io/realestate2?listing=${listingId}`;
 
   const preFilled = `Hello, I'm interested in the ${type} located in ${location}. I saw your listing on *RealPlot Connect*.\n\n${message}\n\n🔗 View listing: ${linkToListing}`;
   const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(preFilled)}`;
