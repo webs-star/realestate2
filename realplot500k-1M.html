@@ -230,6 +230,76 @@ ul.description {
 <div id="listings"></div>
 
 <script>
+
+
+const FREE_LISTINGS_LINK = "https://webs-star.github.io/realestate2/realplotall";
+const ACCESS_KEY = "realplot_paid_access";
+const ACCESS_TIME_KEY = "realplot_paid_time";
+const ACCESS_DURATION = 24 * 60 * 60 * 1000; // 24 hours in ms
+const ALLOWED_REF_PREFIX = "T"; // Paystack reference prefix
+
+const now = Date.now();
+
+// 1️⃣ Check URL reference
+const params = new URLSearchParams(window.location.search);
+const reference = params.get("reference");
+
+// 2️⃣ Check stored access
+const storedAccess = localStorage.getItem(ACCESS_KEY);
+const storedTime = parseInt(localStorage.getItem(ACCESS_TIME_KEY), 10);
+
+// 3️⃣ Determine if stored access is still valid
+const hasValidStoredAccess =
+  storedAccess === "true" &&
+  storedTime &&
+  now - storedTime < ACCESS_DURATION;
+
+// 4️⃣ If reference is valid → grant access & store timestamp
+if (reference && reference.startsWith(ALLOWED_REF_PREFIX) && reference.length >= 10) {
+  localStorage.setItem(ACCESS_KEY, "true");
+  localStorage.setItem(ACCESS_TIME_KEY, now.toString());
+
+  // Clean URL (remove ?reference=...)
+  window.history.replaceState({}, document.title, window.location.pathname);
+}
+// 5️⃣ Else if stored access expired → clear it
+else if (storedTime && now - storedTime >= ACCESS_DURATION) {
+  localStorage.removeItem(ACCESS_KEY);
+  localStorage.removeItem(ACCESS_TIME_KEY);
+}
+// 6️⃣ If no valid access → BLOCK
+else if (!hasValidStoredAccess) {
+  document.body.innerHTML = `
+    <div style="text-align:center; padding:50px; font-family:sans-serif;">
+      <h2>🔒 Access Restricted</h2>
+      <p>This page requires payment to unlock.</p>
+      <p>You can still view free listings below.</p>
+
+      <a href="${FREE_LISTINGS_LINK}"
+         style="
+           display:inline-block;
+           margin-top:20px;
+           font-size:1.2rem;
+           color:white;
+           background:#0aa83f;
+           padding:12px 20px;
+           border-radius:6px;
+           text-decoration:none;
+         ">
+         View Free Listings
+      </a>
+    </div>
+  `;
+  throw new Error("Access blocked: no valid payment reference.");
+}
+
+
+
+
+
+
+
+ 
   const firebaseConfig = {
     apiKey: "AIzaSyDLTAd2u0IlhA4Gm4-0tTSzLUDHFYj045g",
     authDomain: "realestate-afbe6.firebaseapp.com",
