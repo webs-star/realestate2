@@ -31,15 +31,14 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<style>
 body { font-family: Arial; background: #f4f4f4; padding: 20px; }
 h2 { text-align: center; background: #0056b3; color: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
-.card, .filters { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px #ccc; max-width: 800px; margin: 20px auto; }
+.card, .filters { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px #ccc; max-width: 900px; margin: 20px auto; }
 
 input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
 
-/* Listings grid: 2 columns on large screens */
+/* Listings grid: 2 columns max */
 #listings {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -48,32 +47,67 @@ input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
   margin-top: 40px;
 }
 
+/* Card layout: image + details side by side */
 .listing-card {
   background: #fff;
   border-radius: 12px;
   padding: 15px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* side by side */
+  gap: 15px;
 }
 
-/* Carousel container now takes 75% width and auto height */
+/* Image container (75% width) */
 .carousel {
-  width: 75%;         /* 3/4 of card width */
-  height: auto;       /* maintain image aspect ratio */
+  width: 75%;
+  height: auto;
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 12px;
+  flex-shrink: 0;
 }
 
-/* Images show fully without being cut */
 .carousel img {
   width: 100%;
   height: auto;
   display: block;
+  border-radius: 12px;
 }
 
-/* Optional: carousel dots below image */
+/* Details container (25% width) */
+.card-details {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Details styling */
+.card-details p, 
+.card-details ul.description, 
+.card-details button {
+  margin: 5px 0;
+  font-size: 13px;
+}
+
+.card-details .bold-info {
+  font-weight: bold;
+  font-size: 1em;
+}
+
+/* Payment button */
+.card-details button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #0aa83f;
+  color: white;
+  margin-top: auto; /* stick to bottom */
+}
+
+/* Carousel dots */
 .carousel-dots {
   display: flex;
   gap: 6px;
@@ -95,9 +129,7 @@ input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
   background: #0aa83f;
 }
 
-/* Small image columns (thumbnails) */
-.image-column { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
-.image-column img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; }
+ 
   .listing-card h4, .listing-card p { margin: 2px 0; padding: 0; font-size: 14px; }
 
   ul.description { background: #f0f0f0; border-radius: 5px; font-size: 13px; line-height: 1.4; padding: 6px 10px; margin: 6px 0; color: #000; max-height: 200px; overflow-y: auto; }
