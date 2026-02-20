@@ -31,6 +31,11 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<style>
+/* =========================
+   GLOBAL
+========================= */
 body { font-family: Arial; background: #f4f4f4; padding: 20px; }
 h2 { text-align: center; background: #0056b3; color: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
@@ -38,33 +43,37 @@ h2 { text-align: center; background: #0056b3; color: white; padding: 15px; borde
 
 input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
 
-/* Listings grid: 2 columns max */
+/* =========================
+   LISTINGS GRID
+========================= */
 #listings {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
   justify-content: center;
   margin-top: 40px;
 }
 
-/* Card layout: image + details side by side */
+/* =========================
+   LISTING CARD
+========================= */
 .listing-card {
   background: #fff;
   border-radius: 12px;
-  padding: 15px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   display: flex;
-  flex-direction: row; /* side by side */
+  flex-direction: row;
   gap: 15px;
+  overflow: hidden;
 }
 
-/* Image container (75% width) */
+/* IMAGE */
 .carousel {
-  width: 75%;
-  height: auto;
+  flex: 3; /* 3/4 width */
+  max-width: 75%;
   border-radius: 12px;
   overflow: hidden;
-  flex-shrink: 0;
+  position: relative;
 }
 
 .carousel img {
@@ -72,20 +81,18 @@ input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
   height: auto;
   display: block;
   border-radius: 12px;
+  object-fit: cover;
 }
 
-/* Details container (25% width) */
+/* DETAILS */
 .card-details {
-  width: 25%;
+  flex: 1; /* 1/4 width */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 }
 
-/* Details styling */
-.card-details p, 
-.card-details ul.description, 
-.card-details button {
+.card-details p, .card-details ul.description, .card-details button {
   margin: 5px 0;
   font-size: 13px;
 }
@@ -95,7 +102,7 @@ input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
   font-size: 1em;
 }
 
-/* Payment button */
+/* BUTTON */
 .card-details button {
   padding: 6px 10px;
   border: none;
@@ -104,22 +111,24 @@ input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
   cursor: pointer;
   background: #0aa83f;
   color: white;
-  margin-top: auto; /* stick to bottom */
+  margin-top: auto;
 }
 
-/* Carousel dots */
+/* CAROUSEL DOTS */
 .carousel-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 6px;
-  margin-top: 6px;
-  justify-content: center;
 }
 
 .carousel-dots span {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #ccc;
+  background: #fff;
   opacity: 0.6;
   cursor: pointer;
 }
@@ -129,19 +138,45 @@ input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
   background: #0aa83f;
 }
 
- 
-  .listing-card h4, .listing-card p { margin: 2px 0; padding: 0; font-size: 14px; }
+/* DESCRIPTION BOX */
+ul.description {
+  background: #f0f0f0;
+  border-radius: 5px;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 6px 10px;
+  margin: 6px 0;
+  color: #000;
+  max-height: 200px;
+  overflow-y: auto;
+}
 
-  ul.description { background: #f0f0f0; border-radius: 5px; font-size: 13px; line-height: 1.4; padding: 6px 10px; margin: 6px 0; color: #000; max-height: 200px; overflow-y: auto; }
+/* TEXT COLORS */
+.bold-info { font-weight: bold; font-size: 1.2em; }
+.type    { color: #007BFF; }  /* Blue */
+.purpose { color: #28A745; }  /* Green */
+.location { color: #6F42C1; } /* Purple */
+.price   { color: #DC3545; }  /* Red */
 
-  .listing-card button { padding: 6px 10px; border: none; border-radius: 5px; font-size: 13px; cursor: pointer; margin-top: 4px; }
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .listing-card {
+    flex-direction: column;
+  }
+  
+  .carousel, .card-details {
+    max-width: 100%;
+    flex: unset;
+  }
+  
+  .card-details button {
+    margin-top: 10px;
+  }
+}
 
-  .bold-info { font-weight: bold; font-size: 1.2em; }
-  .type    { color: #007BFF; }  /* Blue */
-  .purpose { color: #28A745; }  /* Green */
-  .location { color: #6F42C1; } /* Purple */
-  .price   { color: #DC3545; }  /* Red */
-</style>
+</style> 
 </head>
 <body>
 
