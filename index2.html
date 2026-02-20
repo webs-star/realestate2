@@ -31,17 +31,18 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <style>
-  body { font-family: Arial; background: #f4f4f4; padding: 20px; }
-  h2 { text-align: center; background: #0056b3; color: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-  .card, .filters { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px #ccc; max-width: 800px; margin: 20px auto; }
-  input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
-  img.property { width: 100%; margin-bottom: 10px; border-radius: 10px; }
+body { font-family: Arial; background: #f4f4f4; padding: 20px; }
+h2 { text-align: center; background: #0056b3; color: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
+.card, .filters { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px #ccc; max-width: 800px; margin: 20px auto; }
+
+input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
+
+/* Listings grid: 2 columns on large screens */
 #listings {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); /* 2 columns max */
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   gap: 30px;
   justify-content: center;
   margin-top: 40px;
@@ -56,46 +57,35 @@
   flex-direction: column;
 }
 
-/* Image carousel container */
+/* Carousel container now takes 75% width and auto height */
 .carousel {
-  position: relative;
-  width: 100%;
-  height: 300px; /* Large image height */
-  overflow: hidden;
+  width: 75%;         /* 3/4 of card width */
+  height: auto;       /* maintain image aspect ratio */
   border-radius: 12px;
+  overflow: hidden;
   margin-bottom: 12px;
 }
 
+/* Images show fully without being cut */
 .carousel img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: opacity 0.5s ease-in-out;
-  opacity: 0;
+  height: auto;
+  display: block;
 }
 
-.carousel img.active {
-  opacity: 1;
-}
-
-/* Carousel navigation dots */
+/* Optional: carousel dots below image */
 .carousel-dots {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   gap: 6px;
+  margin-top: 6px;
+  justify-content: center;
 }
 
 .carousel-dots span {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #fff;
+  background: #ccc;
   opacity: 0.6;
   cursor: pointer;
 }
@@ -105,10 +95,9 @@
   background: #0aa83f;
 }
 
- 
-  .image-column { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
-  .image-column img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; }
-
+/* Small image columns (thumbnails) */
+.image-column { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
+.image-column img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; }
   .listing-card h4, .listing-card p { margin: 2px 0; padding: 0; font-size: 14px; }
 
   ul.description { background: #f0f0f0; border-radius: 5px; font-size: 13px; line-height: 1.4; padding: 6px 10px; margin: 6px 0; color: #000; max-height: 200px; overflow-y: auto; }
