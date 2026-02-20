@@ -39,14 +39,13 @@
   input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
   img.property { width: 100%; margin-bottom: 10px; border-radius: 10px; }
 
-  #listings {
+#listings {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); /* Two columns max */
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); /* 2 columns max */
   gap: 30px;
   justify-content: center;
   margin-top: 40px;
 }
-
 
 .listing-card {
   background: #fff;
@@ -57,14 +56,54 @@
   flex-direction: column;
 }
 
-.listing-card img.property {
+/* Image carousel container */
+.carousel {
+  position: relative;
   width: 100%;
-  height: 300px; /* Much larger image */
-  object-fit: cover;
+  height: 300px; /* Large image height */
+  overflow: hidden;
   border-radius: 12px;
   margin-bottom: 12px;
 }
 
+.carousel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.carousel img.active {
+  opacity: 1;
+}
+
+/* Carousel navigation dots */
+.carousel-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+}
+
+.carousel-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.carousel-dots span.active {
+  opacity: 1;
+  background: #0aa83f;
+}
 
  
   .image-column { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
@@ -326,19 +365,53 @@ function loadListings() {
       `;
 
       // Images
-      const imageArray = Array.isArray(item.images) ? item.images : [];
-      if (imageArray.length > 0) {
-        const img = document.createElement("img");
-        img.src = imageArray[0];
-        img.className = "property";
-        card.appendChild(img);
 
-        let index = 0;
-        setInterval(() => {
-          index = (index + 1) % imageArray.length;
-          img.src = imageArray[index];
-        }, 5000);
-      }
+
+
+// Images as carousel
+const imageArray = Array.isArray(item.images) ? item.images : [];
+if (imageArray.length > 0) {
+  const carousel = document.createElement("div");
+  carousel.className = "carousel";
+
+  imageArray.forEach((src, i) => {
+    const img = document.createElement("img");
+    img.src = src;
+    if (i === 0) img.classList.add("active");
+    carousel.appendChild(img);
+  });
+
+  // Navigation dots
+  const dots = document.createElement("div");
+  dots.className = "carousel-dots";
+
+  imageArray.forEach((_, i) => {
+    const dot = document.createElement("span");
+    if (i === 0) dot.classList.add("active");
+    dot.onclick = () => {
+      showSlide(carousel, i);
+    };
+    dots.appendChild(dot);
+  });
+
+  carousel.appendChild(dots);
+  card.insertBefore(carousel, card.firstChild);
+
+  // Automatic slide
+  let index = 0;
+  setInterval(() => {
+    index = (index + 1) % imageArray.length;
+    showSlide(carousel, index);
+  }, 5000);
+
+  function showSlide(carouselEl, slideIndex) {
+    const imgs = carouselEl.querySelectorAll("img");
+    const dots = carouselEl.querySelectorAll(".carousel-dots span");
+    imgs.forEach((img, i) => img.classList.toggle("active", i === slideIndex));
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === slideIndex));
+  }
+}
+     
 
       // Payment
       const payment = getPaymentDetails(item);
