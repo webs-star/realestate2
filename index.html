@@ -397,7 +397,9 @@ function loadListings() {
         <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose||"N/A"}</span></p>
         <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
         <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
-        <p style="font-size:13px; color:#0aa83f;">✅ Last confirmed: ${daysAgo} day(s) ago</p>
+      <p style="font-size:13px; color:#0aa83f;">
+  ✅ Available – Verified ${daysAgo} day(s) ago
+</p>
         <ul class="description">${(item.description||"").split("\n").map(l=>`<li>${l}</li>`).join("")}</ul>
       `;
       card.appendChild(details);
