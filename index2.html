@@ -295,9 +295,10 @@ ul.description {
   </div>
 </div>
 
-<h2>🏠 RealPlot Connect – View Properties</h2>
-<div id="listings"></div>
 
+
+<h2>🏠 RealPlot Connect – View Properties</h2>
+<div id="listings" style="margin-bottom:40px;"></div>
 
 <script>
 const firebaseConfig = {
@@ -309,56 +310,22 @@ const firebaseConfig = {
   messagingSenderId: "202970291965",
   appId: "1:202970291965:web:baaf253d6c9a8685c5e894"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-
-// Return both amount and Paystack link based on price
 function getPaymentDetails(item) {
   const price = Number(item.price) || 0;
-
-  if (price <= 10000) {
-    return { amount: 50, link: "https://paystack.shop/pay/y9rwwamyj9" };
-  }
-
-  if (price <= 20000) {
-    return { amount: 100, link: "https://paystack.shop/pay/nzegf3v7-4" };
-  }
-
-  if (price <= 100000) {
-    return { amount: 150, link: "https://paystack.shop/pay/v-8yf5w823" };
-  }
-
-  if (price <= 500000) {
-    return { amount: 200, link: "https://paystack.shop/pay/ne84jqncvj" };
-  }
-
-  if (price <= 1000000) {
-    return { amount: 250, link: "https://paystack.shop/pay/vzfpldbor5" };
-  }
-
-  if (price <= 5000000) {
-    return { amount: 300, link: "https://paystack.shop/pay/58f53knzyv" };
-  }
-
-  if (price <= 10000000) {
-    return { amount: 350, link: "https://paystack.shop/pay/aupauhxpij" };
-  }
-
-  if (price <= 20000000) {
-    return { amount: 400, link: "https://paystack.shop/pay/0oyapk1b1q" };
-  }
-
-  if (price <= 50000000) {
-    return { amount: 450, link: "https://paystack.shop/pay/iq2cgnyrlt" };
-  }
-
-  return { amount: 500, link: "https://paystack.shop/pay/ib398myq93" };
+  if(price<=10000) return {amount:50, link:"https://paystack.shop/pay/y9rwwamyj9"};
+  if(price<=20000) return {amount:100, link:"https://paystack.shop/pay/nzegf3v7-4"};
+  if(price<=100000) return {amount:150, link:"https://paystack.shop/pay/v-8yf5w823"};
+  if(price<=500000) return {amount:200, link:"https://paystack.shop/pay/ne84jqncvj"};
+  if(price<=1000000) return {amount:250, link:"https://paystack.shop/pay/vzfpldbor5"};
+  if(price<=5000000) return {amount:300, link:"https://paystack.shop/pay/58f53knzyv"};
+  if(price<=10000000) return {amount:350, link:"https://paystack.shop/pay/aupauhxpij"};
+  if(price<=20000000) return {amount:400, link:"https://paystack.shop/pay/0oyapk1b1q"};
+  if(price<=50000000) return {amount:450, link:"https://paystack.shop/pay/iq2cgnyrlt"};
+  return {amount:500, link:"https://paystack.shop/pay/ib398myq93"};
 }
-
-
-
 
 function loadListings() {
   const filterType = document.getElementById("filterType").value.toLowerCase().trim();
@@ -366,146 +333,88 @@ function loadListings() {
   const filterPurpose = document.getElementById("filterPurpose").value.toLowerCase().trim();
   const minPrice = parseInt(document.getElementById("minPrice").value) || 0;
   const maxPrice = parseInt(document.getElementById("maxPrice").value) || Infinity;
-
-  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+  const THIRTY_DAYS = 30*24*60*60*1000;
   const now = Date.now();
 
-  db.ref("listings").once("value", snapshot => {
+  db.ref("listings").once("value", snapshot=>{
     const data = snapshot.val();
     const listingsDiv = document.getElementById("listings");
     listingsDiv.innerHTML = "";
+    if(!data){ listingsDiv.innerHTML="<p>No listings found.</p>"; return; }
 
-    if (!data) {
-      listingsDiv.innerHTML = "<p>No listings found.</p>";
-      return;
-    }
+    const sorted = Object.entries(data).sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
 
-    const sortedEntries = Object.entries(data).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
-
-    for (const [id, item] of sortedEntries) {
-
-      // ✅ DEFAULT lastConfirmed = timestamp if missing
+    for(const [id,item] of sorted){
       const lastConfirmed = item.lastConfirmed || item.timestamp || now;
+      if(now - lastConfirmed > THIRTY_DAYS) continue;
 
-      // ✅ AUTO EXPIRE AFTER 30 DAYS
-      if (now - lastConfirmed > THIRTY_DAYS) {
-        continue; // Skip expired listing
-      }
-
-      const itemType = (item.type || "").toLowerCase().trim();
-      const itemLocation = (item.location || "").toLowerCase().trim();
-      const itemPurpose = (item.purpose || "").toLowerCase().trim();
-      const priceMatch = item.price >= minPrice && item.price <= maxPrice;
-
+      const itemType = (item.type||"").toLowerCase();
+      const itemLocation = (item.location||"").toLowerCase();
+      const itemPurpose = (item.purpose||"").toLowerCase();
+      const priceMatch = item.price>=minPrice && item.price<=maxPrice;
       const typeMatch = !filterType || itemType.includes(filterType);
-      const purposeMatch = !filterPurpose || itemPurpose === filterPurpose;
+      const purposeMatch = !filterPurpose || itemPurpose===filterPurpose;
       const locationMatch = !filterLocation || itemLocation.includes(filterLocation);
+      if(!typeMatch||!purposeMatch||!locationMatch||!priceMatch) continue;
 
-      if (!typeMatch || !purposeMatch || !locationMatch || !priceMatch) continue;
-
-      const daysAgo = Math.floor((now - lastConfirmed) / (1000 * 60 * 60 * 24));
+      const daysAgo = Math.floor((now - lastConfirmed)/(1000*60*60*24));
 
       const card = document.createElement("div");
-      card.className = "listing-card";
-      card.innerHTML = `
+      card.className="listing-card";
+      card.style.display="flex"; card.style.flexDirection="row"; card.style.gap="15px"; card.style.marginBottom="25px";
+      card.style.background="#fff"; card.style.borderRadius="12px"; card.style.boxShadow="0 6px 18px rgba(0,0,0,0.08)"; card.style.overflow="hidden";
+
+      // Carousel
+      const imageArray = Array.isArray(item.images)?item.images:[];
+      if(imageArray.length>0){
+        const carousel=document.createElement("div");
+        carousel.className="carousel"; carousel.style.position="relative"; carousel.style.flex="3"; carousel.style.maxWidth="70%";
+        imageArray.forEach((src,i)=>{
+          const img=document.createElement("img"); img.src=src; img.style.width="100%"; img.style.height="auto"; img.style.objectFit="cover";
+          if(i!==0) img.style.display="none"; carousel.appendChild(img);
+        });
+        const dots=document.createElement("div"); dots.className="carousel-dots"; dots.style.position="absolute"; dots.style.bottom="10px";
+        dots.style.left="50%"; dots.style.transform="translateX(-50%)"; dots.style.display="flex"; dots.style.gap="6px";
+        imageArray.forEach((_,i)=>{
+          const dot=document.createElement("span"); dot.style.width="10px"; dot.style.height="10px"; dot.style.borderRadius="50%"; dot.style.background="#fff"; dot.style.opacity=i===0?1:0.6; dot.style.cursor="pointer";
+          dot.onclick=()=>showSlide(carousel,i);
+          dots.appendChild(dot);
+        });
+        carousel.appendChild(dots);
+        card.appendChild(carousel);
+        let index=0; setInterval(()=>{ index=(index+1)%imageArray.length; showSlide(carousel,index); },5000);
+        function showSlide(c,i){
+          const imgs=c.querySelectorAll("img"); const ds=c.querySelectorAll(".carousel-dots span");
+          imgs.forEach((img,j)=>img.style.display=j===i?"block":"none");
+          ds.forEach((dot,j)=>dot.style.opacity=j===i?1:0.6);
+        }
+      }
+
+      // Details
+      const details=document.createElement("div"); details.className="card-details"; details.style.flex="1"; details.style.display="flex"; details.style.flexDirection="column";
+      details.innerHTML=`
         <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
-        <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
+        <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose||"N/A"}</span></p>
         <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
         <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
-        <p style="font-size:13px; color:#0aa83f;">
-          ✅ Last confirmed: ${daysAgo} day(s) ago
-        </p>
-        <ul class="description">
-          ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
-        </ul>
+        <p style="font-size:13px; color:#0aa83f;">✅ Last confirmed: ${daysAgo} day(s) ago</p>
+        <ul class="description">${(item.description||"").split("\n").map(l=>`<li>${l}</li>`).join("")}</ul>
       `;
-
-      // Images
-
-
-
-// Images as carousel
-const imageArray = Array.isArray(item.images) ? item.images : [];
-if (imageArray.length > 0) {
-  const carousel = document.createElement("div");
-  carousel.className = "carousel";
-
-  imageArray.forEach((src, i) => {
-    const img = document.createElement("img");
-    img.src = src;
-    if (i === 0) img.classList.add("active");
-    carousel.appendChild(img);
-  });
-
-  // Navigation dots
-  const dots = document.createElement("div");
-  dots.className = "carousel-dots";
-
-  imageArray.forEach((_, i) => {
-    const dot = document.createElement("span");
-    if (i === 0) dot.classList.add("active");
-    dot.onclick = () => {
-      showSlide(carousel, i);
-    };
-    dots.appendChild(dot);
-  });
-
-  carousel.appendChild(dots);
-  card.insertBefore(carousel, card.firstChild);
-
-  // Automatic slide
-  let index = 0;
-  setInterval(() => {
-    index = (index + 1) % imageArray.length;
-    showSlide(carousel, index);
-  }, 5000);
-
-  function showSlide(carouselEl, slideIndex) {
-    const imgs = carouselEl.querySelectorAll("img");
-    const dots = carouselEl.querySelectorAll(".carousel-dots span");
-    imgs.forEach((img, i) => img.classList.toggle("active", i === slideIndex));
-    dots.forEach((dot, i) => dot.classList.toggle("active", i === slideIndex));
-  }
-}
-     
+      card.appendChild(details);
 
       // Payment
-      const payment = getPaymentDetails(item);
-      const payBtn = document.createElement("button");
-      payBtn.textContent = `🔓 Pay KES ${payment.amount} to Contact Owner`;
-      payBtn.style.background = "#0aa83f";
-      payBtn.style.color = "white";
-      payBtn.style.marginTop = "8px";
-      payBtn.style.borderRadius = "6px";
-      payBtn.style.fontWeight = "bold";
+      const payment=getPaymentDetails(item);
+      const btn=document.createElement("button"); btn.textContent=`🔓 Pay KES ${payment.amount} to Contact Owner`;
+      btn.style.background="#0aa83f"; btn.style.color="#fff"; btn.style.marginTop="8px"; btn.onclick=()=>{window.open(payment.link,"_blank");};
+      details.appendChild(btn);
 
-      payBtn.onclick = () => {
-        const paymentWindow = window.open(payment.link, "_blank");
-
-        const checkPayment = setInterval(() => {
-          if (paymentWindow.closed) {
-            clearInterval(checkPayment);
-
-            const contactEl = document.createElement("p");
-            contactEl.innerHTML = `<strong>Contact Owner:</strong> <span class="bold-info contact">${item.contact}</span>`;
-            card.appendChild(contactEl);
-            payBtn.remove();
-          }
-        }, 1000);
-      };
-
-      card.appendChild(payBtn);
       listingsDiv.appendChild(card);
     }
   });
 }
 
- 
-
-window.onload = () => { loadListings(); };
+window.onload=()=>{loadListings();};
 </script>
-
-
 
 
 
