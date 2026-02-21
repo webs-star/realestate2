@@ -557,30 +557,38 @@ function showMapForListing(destLat, destLng, containerId) {
         }).addTo(map);
 
         // --- Routing Error Handler (The critical fallback) ---
-       routeControl.on('routesfound', function (e) {
-    const route = e.routes[0];
+        routeControl.on('routingerror', function (e) {
+            console.error("Road Routing Error:", e.error);
+            
+            // Immediately trigger straight-line fallback on failure
+            straightLineFallback(userLatLng);
+        });
 
-    const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
-    const timeMin = (route.summary.totalTime / 60).toFixed(0);
+        // --- Routing Success Handler ---
+        routeControl.on('routesfound', function (e) {
+            const route = e.routes[0];
+            const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
+            const timeMin = (route.summary.totalTime / 60).toFixed(0);
 
-    let steps = "<strong>Live Step-by-Step Directions:</strong><br>";
+            let steps = `<strong>Live Step-by-Step Directions:</strong><br>`;
+            const instructions = route.instructions || [];
 
-    if (route.instructions && route.instructions.length > 0) {
-        for (const step of route.instructions) {
-            if (step.instruction) {
-                steps += `➡️ ${step.instruction} (${(step.distance / 1000).toFixed(2)} km)<br>`;
+            const formatter = new L.Routing.Formatter();
+            if (instructions.length === 0 && route.instructions === undefined) {
+                route.instructions = formatter._getInstructions.call({options:{}}, route);
             }
-        }
-    } else {
-        steps += "<em>No step instructions available.</em>";
-    }
 
-    steps += `<br><em>Total Distance:</em> **${distanceKm} km**<br>`;
-    steps += `<em>Estimated Time:</em> **${timeMin} mins**`;
+            for (const step of route.instructions || []) {
+                if (step.text) {
+                    steps += `➡️ ${step.text} (${(step.distance / 1000).toFixed(2)} km)<br>`;
+                }
+            }
 
-    directionsList.innerHTML = steps;
-});
-        
+            steps += `<br><em>Total Distance:</em> **${distanceKm} km**<br>`;
+            steps += `<em>Estimated Time:</em> **${timeMin} mins**`;
+
+            directionsList.innerHTML = steps;
+        });
     }
 
     function straightLineFallback(userLatLng) {
@@ -687,7 +695,6 @@ function openChat(contact, location, type, listingId) {
 
   window.open(whatsappURL, "_blank");
 }
-
 
 
 
