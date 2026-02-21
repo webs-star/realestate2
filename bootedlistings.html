@@ -110,17 +110,17 @@
   overflow: hidden;
 }
 
-/* IMAGE AREA (3/4) */
-.card-image {
+
+  .card-image {
   width: 100%;
-  height: 320px; /* big image */
 }
 
 .card-image img {
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* prevents cutting */
-}
+  height: auto;          /* no cropping */
+  display: block;
+  object-fit: contain;   /* ensures full image */
+} 
 
 /* DETAILS (1/4) */
 .card-details {
@@ -425,16 +425,16 @@ db.ref("topListings").once("value", snapshot => {
 
       if (!typeMatch || !purposeMatch || !locationMatch) continue;
 
-     const card = document.createElement("div");
+const card = document.createElement("div");
 card.className = "listing-card";
 
-// IMAGE SECTION (3/4)
 const imageDiv = document.createElement("div");
 imageDiv.className = "card-image";
 
 const detailsDiv = document.createElement("div");
 detailsDiv.className = "card-details";
 
+// IMAGE (no cropping)
 const imageArray = Array.isArray(item.images) ? item.images : [];
 
 if (imageArray.length > 0) {
@@ -455,7 +455,7 @@ if (imageArray.length > 0) {
   }
 }
 
-// DETAILS (1/4)
+// DETAILS
 detailsDiv.innerHTML = `
   <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
   <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
@@ -466,31 +466,41 @@ detailsDiv.innerHTML = `
   </ul>
 `;
 
-// MAP BELOW IMAGE (BIG)
+// MAP (hidden until clicked)
 const mapId = "map-" + id;
-const mapDiv = document.createElement("div");
-mapDiv.id = mapId;
-mapDiv.className = "map-container";
+const mapContainer = document.createElement("div");
+mapContainer.id = mapId;
+mapContainer.style.display = "none";   /* hidden by default */
+mapContainer.style.marginTop = "10px";
 
+// BUTTON: show map
 const mapBtn = document.createElement("button");
 mapBtn.textContent = "📍 Show Directions";
-mapBtn.onclick = () => showMapForListing(item.lat, item.lng, mapId);
+mapBtn.onclick = () => {
+  mapContainer.style.display = "block";
+  mapContainer.style.height = "320px";
 
+  showMapForListing(item.lat, item.lng, mapId);
+};
+
+// WHATSAPP
 const chatBtn = document.createElement("button");
 chatBtn.textContent = "💬 Chat via WhatsApp";
 chatBtn.style.background = "#25D366";
 chatBtn.style.color = "white";
 chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
 
-// ORDER: image → map → details (or adjust)
+// ORDER: image → details → map (map hidden until click)
 card.appendChild(imageDiv);
-card.appendChild(mapDiv);
 card.appendChild(detailsDiv);
+card.appendChild(mapContainer);
 
 detailsDiv.appendChild(mapBtn);
 detailsDiv.appendChild(chatBtn);
 
 listingsDiv.appendChild(card);
+
+     
     }
   });
 }
