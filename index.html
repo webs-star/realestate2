@@ -339,12 +339,10 @@ ul.description {
 
 <h2>🏠 RealPlot Connect – View Properties</h2>
 
-<h3>
-  <a href="https://webs-star.github.io/realestate2/bootedlistings" style="color:blue; text-decoration:underline;">
-    ⭐ Top / Boosted / Free-View Listing
-  </a>
-</h3>
-
+<div style="display:flex; justify-content:space-between; max-width:900px; margin:20px auto;">
+  <div id="promoTopLeft"></div>
+  <div id="promoTopRight"></div>
+</div>
 
  <!-- Normal Listings Section -->
 <h4 style="color:#0aa83f; margin-top:40px;">
@@ -469,11 +467,79 @@ function loadListings() {
       details.appendChild(btn);
       card.appendChild(details);
 
-      listingsDiv.appendChild(card);
+     listingsDiv.appendChild(card);
+
+// After every 4 cards (two rows in 2-column grid)
+if ((listingsDiv.children.length % 4) === 0) {
+  listingsDiv.appendChild(createPromoBlock());
+}
     }
   });
 }
 window.onload=()=>{loadListings();};
+
+
+
+
+
+
+const promoTitles = [
+  "⭐ Top / Boosted / Free-View Listing",
+  "🏠 Free - View Properties",
+  "🆕 New Listings",
+  "⭐ Top Properties",
+  "💼 Pro Listings",
+  "📌 Verified Listings",
+  "🏡 Affordable Homes",
+  "🏗️ Land & Plots Deals",
+  "📍 Properties Near You",
+  "🔓 Direct Owner Contacts",
+  "💰 Best Price Listings",
+  "🏠 Rental Units",
+  "🏢 Commercial Properties",
+  "🌍 Real Estate Map View",
+  "🚩 Trending Listings",
+  "✔ Verified Deals",
+  "📢 Hot Listings",
+  "🔥 Featured Properties",
+  "🛠️ Developer Deals",
+  "💼 Agent Listings",
+  "📅 Recently Added",
+  "⭐ Premium Listings",
+  "🚀 Fast-Sell Listings",
+  "📊 Market Specials",
+  "🏠 Homes Under Budget",
+  "📍 Map Guided Listings",
+  "💡 Property Insights",
+  "🏘️ Neighborhood Deals",
+  "📢 Limited Time Deals",
+  "🎯 Direct Listings",
+  "🆕 Fresh Listings",
+  "🌟 Handpicked Deals"
+];
+function createPromoBlock() {
+  const div = document.createElement("div");
+  div.className = "promo-block";
+  const title = promoTitles[Math.floor(Math.random() * promoTitles.length)];
+
+  div.innerHTML = `
+    <h3>
+      <a href="https://webs-star.github.io/realestate2/bootedlistings"
+         style="color:blue; text-decoration:underline;">
+        ${title}
+      </a>
+    </h3>
+  `;
+
+  return div;
+}
+
+
+ window.onload = () => {
+  loadListings();
+  document.getElementById("promoTopLeft").appendChild(createPromoBlock());
+  document.getElementById("promoTopRight").appendChild(createPromoBlock());
+};
 </script>
 
 
