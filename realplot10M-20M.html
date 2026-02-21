@@ -424,7 +424,7 @@ function loadListings() {
     const sortedEntries = Object.entries(data).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
 
     for (const [id, item] of sortedEntries) {
-      if (item.price < 100000 || item.price > 500000) continue; // Only 100k – 500k
+      if (item.price < 1000000 || item.price > 2000000) continue; 
 
       const itemType = (item.type || "").toLowerCase().trim();
       const itemLocation = (item.location || "").toLowerCase().trim();
