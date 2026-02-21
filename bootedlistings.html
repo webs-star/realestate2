@@ -103,13 +103,60 @@
 
 .listing-card {
   background: #fff;
-  border-radius: 10px;
-  padding: 10px;
-  width: 300px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  width: 900px;
+  max-width: 100%;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  overflow: hidden;
+}
+
+/* LEFT SIDE – IMAGE (75%) */
+.card-image {
+  flex: 3;
+  position: relative;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* RIGHT SIDE – DESCRIPTION (25%) */
+.card-details {
+  flex: 1;
+  padding: 15px;
+  background: #fafafa;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
+
+.card-details p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .listing-card {
+    flex-direction: column;
+  }
+
+  .card-image,
+  .card-details {
+    flex: none;
+    width: 100%;
+  }
+
+  .card-image img {
+    height: 220px;
+  }
+}
+
+
+   
 
 .image-column {
   display: flex;
@@ -366,40 +413,49 @@ db.ref("topListings").once("value", snapshot => {
 
       if (!typeMatch || !purposeMatch || !locationMatch) continue;
 
-      // ⭐ CREATE CARD
       const card = document.createElement("div");
-      card.className = "listing-card";
+card.className = "listing-card";
 
-      card.innerHTML = `
-        <p style="color:#d48c00; font-weight:bold;">⭐ BOOSTED LISTING</p>
-        <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
-        <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
-        <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
-        <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
-        <ul class="description">
-          ${(item.description || "")
-            .split("\n")
-            .map(line => `<li>${line}</li>`)
-            .join("")}
-        </ul>
-        <p><strong>Contact:</strong> <span class="bold-info contact">${item.contact}</span></p>
-      `;
+const imageDiv = document.createElement("div");
+imageDiv.className = "card-image";
 
-      // ✅ IMAGE SLIDER
-      const imageArray = Array.isArray(item.images) ? item.images : [];
+const detailsDiv = document.createElement("div");
+detailsDiv.className = "card-details";
 
-      if (imageArray.length > 0) {
-        const img = document.createElement("img");
-        img.src = imageArray[0];
-        img.className = "property";
-        card.appendChild(img);
+detailsDiv.innerHTML = `
+  <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
+  <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
+  <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
+  <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
+  <ul class="description">
+    ${(item.description || "")
+      .split("\n")
+      .map(line => `<li>${line}</li>`)
+      .join("")}
+  </ul>
+`;
 
-        let index = 0;
-        setInterval(() => {
-          index = (index + 1) % imageArray.length;
-          img.src = imageArray[index];
-        }, 4000);
-      }
+
+const imageArray = Array.isArray(item.images) ? item.images : [];
+
+if (imageArray.length > 0) {
+  const img = document.createElement("img");
+  img.src = imageArray[0];
+  img.style.transition = "opacity 0.5s ease-in-out";
+
+  imageDiv.appendChild(img);
+
+  let index = 0;
+  setInterval(() => {
+    index = (index + 1) % imageArray.length;
+    img.style.opacity = 0;
+    setTimeout(() => {
+      img.src = imageArray[index];
+      img.style.opacity = 1;
+    }, 500);
+  }, 5000);
+}
+     
 
       // ✅ MAP BUTTON
       const mapId = "map-" + id;
@@ -423,6 +479,8 @@ db.ref("topListings").once("value", snapshot => {
       card.appendChild(mapBtn);
       card.appendChild(chatBtn);
       card.appendChild(mapDiv);
+card.appendChild(imageDiv);
+card.appendChild(detailsDiv);
 
       listingsDiv.appendChild(card);
     }
