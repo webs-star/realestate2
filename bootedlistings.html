@@ -91,8 +91,9 @@
     img.property {
       width: 100%; margin-bottom: 10px; border-radius: 10px;
     }
-   
- #listings {
+ 
+
+#listings {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -104,16 +105,17 @@
 .listing-card {
   background: #fff;
   border-radius: 12px;
-  width: calc(50% - 20px);  /* 2 per row */
+  width: calc(50% - 20px); /* 2 per row */
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   display: flex;
   overflow: hidden;
+  min-height: 250px;
 }
 
 /* LEFT SIDE – IMAGE (75%) */
 .card-image {
   flex: 3;
-  height: 250px;   /* important */
+  height: 250px;
 }
 
 .card-image img {
@@ -137,20 +139,18 @@
 @media (max-width: 900px) {
   .listing-card {
     width: 100%;
+    flex-direction: column;
   }
-}
+
   .card-image,
   .card-details {
-    flex: none;
     width: 100%;
   }
 
-  .card-image img {
+  .card-image {
     height: 220px;
   }
 }
-
-
    
 
 .image-column {
@@ -440,7 +440,9 @@ if (imageArray.length > 0) {
 
   imageDiv.appendChild(img);
 
-  let index = 0;
+ let index = 0;
+
+if (imageArray.length > 1) {
   setInterval(() => {
     index = (index + 1) % imageArray.length;
     img.style.opacity = 0;
