@@ -36,83 +36,146 @@
 /* =========================
    GLOBAL
 ========================= */
-body { font-family: Arial; background: #f4f4f4; padding: 20px; }
-h2 { text-align: center; background: #0056b3; color: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
+}
 
-.card, .filters { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px #ccc; max-width: 900px; margin: 20px auto; }
+h2 {
+  text-align: center;
+  background: #0056b3;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
 
-input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
+.card,
+.filters {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  max-width: 900px;
+  margin: 20px auto;
+}
 
 /* =========================
-   LISTINGS GRID
+   LISTINGS GRID (2 columns)
 ========================= */
 #listings {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  justify-content: center;
-  margin-top: 40px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  justify-items: center;
 }
 
-
-
-#listings {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* max 2 columns per row */
-  gap: 30px;
-  justify-content: center;
-  margin-top: 40px;
+@media (max-width: 800px) {
+  #listings {
+    grid-template-columns: 1fr;
+  }
 }
 
- 
-/* IMAGE */
-.carousel {
-  flex: 3; /* 3/4 width */
-  max-width: 75%;
-  border-radius: 12px;
-  overflow: hidden;
-  position: relative;
-}
-
-.carousel img {
+/* =========================
+   LISTING CARD
+========================= */
+.listing-card {
   width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 12px;
-  object-fit: cover;
+  max-width: 500px;
+  padding: 15px;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
 }
 
-/* DETAILS */
+.listing-card:hover {
+  transform: translateY(-5px);
+}
+
+/* =========================
+   IMAGE COLUMN
+========================= */
+.image-column {
+  flex: 3;
+  max-width: 70%;
+}
+
+.image-column img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.image-column img:hover {
+  transform: scale(1.02);
+}
+
+/* =========================
+   DETAILS COLUMN
+========================= */
 .card-details {
-  flex: 1; /* 1/4 width */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
 }
 
-.card-details p, .card-details ul.description, .card-details button {
-  margin: 5px 0;
-  font-size: 13px;
+.card-details p {
+  margin: 4px 0;
+  font-size: 14px;
 }
 
 .card-details .bold-info {
   font-weight: bold;
-  font-size: 1em;
 }
 
-/* BUTTON */
+/* =========================
+   DESCRIPTION BOX
+========================= */
+ul.description {
+  font-size: 14px;
+  line-height: 1.5;
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* =========================
+   BUTTONS
+========================= */
 .card-details button {
-  padding: 6px 10px;
+  padding: 8px 12px;
   border: none;
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   background: #0aa83f;
   color: white;
-  margin-top: auto;
+  margin-top: 10px;
 }
 
-/* CAROUSEL DOTS */
+.edit-btn {
+  background: #28a745;
+  color: white;
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: white;
+}
+
+/* =========================
+   CAROUSEL DOTS
+========================= */
 .carousel-dots {
   position: absolute;
   bottom: 8px;
@@ -136,41 +199,20 @@ input, select, button { width: 100%; margin-top: 10px; padding: 10px; }
   background: #0aa83f;
 }
 
-/* DESCRIPTION BOX */
-ul.description {
-  background: #f0f0f0;
-  border-radius: 5px;
-  font-size: 13px;
-  line-height: 1.4;
-  padding: 6px 10px;
-  margin: 6px 0;
-  color: #000;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-/* TEXT COLORS */
-.bold-info { font-weight: bold; font-size: 1.2em; }
-.type    { color: #007BFF; }  /* Blue */
-.purpose { color: #28A745; }  /* Green */
-.location { color: #6F42C1; } /* Purple */
-.price   { color: #DC3545; }  /* Red */
-
-/* RESPONSIVE: 1 column on smaller screens */
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 768px) {
-  #listings {
-    grid-template-columns: 1fr; /* stack cards on mobile */
-  }
-
   .listing-card {
     flex-direction: column;
   }
-  
-  .carousel, .card-details {
+
+  .image-column,
+  .card-details {
     max-width: 100%;
     flex: unset;
   }
-  
+
   .card-details button {
     margin-top: 10px;
   }
@@ -338,95 +380,100 @@ function getPaymentDetails(item) {
   if(price<=50000000) return {amount:170, link:"https://paystack.shop/pay/iq2cgnyrlt"};
   return {amount:200, link:"https://paystack.shop/pay/ib398myq93"};
 }
-
 function loadListings() {
   const filterType = document.getElementById("filterType").value.toLowerCase().trim();
   const filterLocation = document.getElementById("filterLocation").value.toLowerCase().trim();
   const filterPurpose = document.getElementById("filterPurpose").value.toLowerCase().trim();
   const minPrice = parseInt(document.getElementById("minPrice").value) || 0;
   const maxPrice = parseInt(document.getElementById("maxPrice").value) || Infinity;
-  const THIRTY_DAYS = 30*24*60*60*1000;
+
+  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
   const now = Date.now();
 
-  db.ref("listings").once("value", snapshot=>{
+  db.ref("listings").once("value", snapshot => {
     const data = snapshot.val();
     const listingsDiv = document.getElementById("listings");
     listingsDiv.innerHTML = "";
-    if(!data){ listingsDiv.innerHTML="<p>No listings found.</p>"; return; }
 
-    const sorted = Object.entries(data).sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
+    if (!data) {
+      listingsDiv.innerHTML = "<p>No listings found.</p>";
+      return;
+    }
 
-    for(const [id,item] of sorted){
+    const sorted = Object.entries(data).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
+
+    for (const [id, item] of sorted) {
       const lastConfirmed = item.lastConfirmed || item.timestamp || now;
-      if(now - lastConfirmed > THIRTY_DAYS) continue;
+      if (now - lastConfirmed > THIRTY_DAYS) continue;
 
-      const itemType = (item.type||"").toLowerCase();
-      const itemLocation = (item.location||"").toLowerCase();
-      const itemPurpose = (item.purpose||"").toLowerCase();
-      const priceMatch = item.price>=minPrice && item.price<=maxPrice;
+      const itemType = (item.type || "").toLowerCase();
+      const itemLocation = (item.location || "").toLowerCase();
+      const itemPurpose = (item.purpose || "").toLowerCase();
+
+      const priceMatch = item.price >= minPrice && item.price <= maxPrice;
       const typeMatch = !filterType || itemType.includes(filterType);
-      const purposeMatch = !filterPurpose || itemPurpose===filterPurpose;
+      const purposeMatch = !filterPurpose || itemPurpose === filterPurpose;
       const locationMatch = !filterLocation || itemLocation.includes(filterLocation);
-      if(!typeMatch||!purposeMatch||!locationMatch||!priceMatch) continue;
 
-      const daysAgo = Math.floor((now - lastConfirmed)/(1000*60*60*24));
+      if (!typeMatch || !purposeMatch || !locationMatch || !priceMatch) continue;
 
+      const daysAgo = Math.floor((now - lastConfirmed) / (1000 * 60 * 60 * 24));
+
+      // CARD
       const card = document.createElement("div");
-      card.className="listing-card";
-      card.style.display="flex"; card.style.flexDirection="row"; card.style.gap="15px"; card.style.marginBottom="25px";
-      card.style.background="#fff"; card.style.borderRadius="12px"; card.style.boxShadow="0 6px 18px rgba(0,0,0,0.08)"; card.style.overflow="hidden";
+      card.className = "listing-card";
 
-      // Carousel
-      const imageArray = Array.isArray(item.images)?item.images:[];
-      if(imageArray.length>0){
-        const carousel=document.createElement("div");
-        carousel.className="carousel"; carousel.style.position="relative"; carousel.style.flex="3"; carousel.style.maxWidth="70%";
-        imageArray.forEach((src,i)=>{
-          const img=document.createElement("img"); img.src=src; img.style.width="100%"; img.style.height="auto"; img.style.objectFit="cover";
-          if(i!==0) img.style.display="none"; carousel.appendChild(img);
-        });
-        const dots=document.createElement("div"); dots.className="carousel-dots"; dots.style.position="absolute"; dots.style.bottom="10px";
-        dots.style.left="50%"; dots.style.transform="translateX(-50%)"; dots.style.display="flex"; dots.style.gap="6px";
-        imageArray.forEach((_,i)=>{
-          const dot=document.createElement("span"); dot.style.width="10px"; dot.style.height="10px"; dot.style.borderRadius="50%"; dot.style.background="#fff"; dot.style.opacity=i===0?1:0.6; dot.style.cursor="pointer";
-          dot.onclick=()=>showSlide(carousel,i);
-          dots.appendChild(dot);
-        });
-        carousel.appendChild(dots);
-        card.appendChild(carousel);
-        let index=0; setInterval(()=>{ index=(index+1)%imageArray.length; showSlide(carousel,index); },5000);
-        function showSlide(c,i){
-          const imgs=c.querySelectorAll("img"); const ds=c.querySelectorAll(".carousel-dots span");
-          imgs.forEach((img,j)=>img.style.display=j===i?"block":"none");
-          ds.forEach((dot,j)=>dot.style.opacity=j===i?1:0.6);
-        }
+      // IMAGE COLUMN
+      const imageColumn = document.createElement("div");
+      imageColumn.className = "image-column";
+
+      const imageArray = Array.isArray(item.images) ? item.images : [];
+      if (imageArray.length > 0) {
+        const img = document.createElement("img");
+        img.src = imageArray[0];
+        imageColumn.appendChild(img);
+
+        let index = 0;
+        setInterval(() => {
+          index = (index + 1) % imageArray.length;
+          img.src = imageArray[index];
+        }, 5000);
       }
 
-      // Details
-      const details=document.createElement("div"); details.className="card-details"; details.style.flex="1"; details.style.display="flex"; details.style.flexDirection="column";
-      details.innerHTML=`
+      card.appendChild(imageColumn);
+
+      // DETAILS COLUMN
+      const details = document.createElement("div");
+      details.className = "card-details";
+
+      details.innerHTML = `
         <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
-        <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose||"N/A"}</span></p>
+        <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
         <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
         <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
-      <p style="font-size:13px; color:#0aa83f;">
-  ✅ Available – Verified ${daysAgo} day(s) ago
-</p>
-        <ul class="description">${(item.description||"").split("\n").map(l=>`<li>${l}</li>`).join("")}</ul>
-      `;
-      card.appendChild(details);
 
-      // Payment
-      const payment=getPaymentDetails(item);
-      const btn=document.createElement("button"); btn.textContent=`🔓 Pay KES ${payment.amount} to Contact Owner`;
-      btn.style.background="#0aa83f"; btn.style.color="#fff"; btn.style.marginTop="8px"; btn.onclick=()=>{window.open(payment.link,"_blank");};
+        <p style="font-size:13px; color:#0aa83f;">
+          ✅ Available – Verified ${daysAgo} day(s) ago
+        </p>
+
+        <ul class="description">
+          ${(item.description || "").split("\n").map(l => `<li>${l}</li>`).join("")}
+        </ul>
+      `;
+
+      // PAYMENT BUTTON
+      const payment = getPaymentDetails(item);
+      const btn = document.createElement("button");
+      btn.textContent = `🔓 Pay KES ${payment.amount} to Contact Owner`;
+      btn.onclick = () => window.open(payment.link, "_blank");
+
       details.appendChild(btn);
+      card.appendChild(details);
 
       listingsDiv.appendChild(card);
     }
   });
 }
-
 window.onload=()=>{loadListings();};
 </script>
 
