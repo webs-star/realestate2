@@ -31,7 +31,6 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <style>
 /* =========================
    GLOBAL
@@ -69,7 +68,6 @@ h2 {
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   justify-items: center;
-  margin-top: 40px;
 }
 
 @media (max-width: 800px) {
@@ -100,30 +98,26 @@ h2 {
 }
 
 /* =========================
-   IMAGE / CAROUSEL
+   IMAGE COLUMN
 ========================= */
-.carousel {
+.image-column {
   width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  position: relative;
 }
 
-.carousel img {
+.image-column img {
   width: 100%;
   height: auto;
-  display: block;
   object-fit: cover;
   border-radius: 12px;
   transition: transform 0.3s ease;
 }
 
-.carousel img:hover {
+.image-column img:hover {
   transform: scale(1.02);
 }
 
 /* =========================
-   DETAILS COLUMN
+   DETAILS COLUMN (bigger text)
 ========================= */
 .card-details {
   flex: 1;
@@ -132,50 +126,41 @@ h2 {
 }
 
 .card-details p {
-  margin: 4px 0;
-  font-size: 14px;
+  margin: 6px 0;
+  font-size: 17px; /* ⬆ bigger text */
 }
 
 .card-details .bold-info {
   font-weight: bold;
-  font-size: 1.1em;
+  font-size: 18px; /* ⬆ bigger bold text */
 }
 
 /* =========================
-   DESCRIPTION BOX
+   DESCRIPTION BOX (bigger text)
 ========================= */
 ul.description {
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 16px; /* ⬆ bigger description text */
+  line-height: 1.6;
   background: #f9f9f9;
-  padding: 8px;
+  padding: 10px;
   border-radius: 8px;
-  max-height: 200px;
+  max-height: 220px;
   overflow-y: auto;
-  color: #000;
 }
-
-/* =========================
-   TEXT COLORS
-========================= */
-.bold-info { font-weight: bold; font-size: 1.2em; }
-.type      { color: #007BFF; }
-.purpose   { color: #28A745; }
-.location  { color: #6F42C1; }
-.price     { color: #DC3545; }
 
 /* =========================
    BUTTONS
 ========================= */
 .card-details button {
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: none;
   border-radius: 6px;
   font-weight: bold;
+  font-size: 16px; /* ⬆ bigger button text */
   cursor: pointer;
   background: #0aa83f;
   color: white;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .edit-btn {
@@ -222,14 +207,14 @@ ul.description {
     flex-direction: column;
   }
 
-  .carousel,
+  .image-column,
   .card-details {
     max-width: 100%;
     flex: unset;
   }
 
   .card-details button {
-    margin-top: 10px;
+    margin-top: 12px;
   }
 }
 </style>
@@ -328,7 +313,7 @@ ul.description {
       <option value="vacant land">Vacant Land</option>
       <option value="industrial">Industrial Property</option>
       <option value="resort">Resort / Hotel</option>
-    </select>
+    </select><br>
     
     <select id="filterPurpose">
       <option value="">All Purposes</option>
@@ -336,16 +321,16 @@ ul.description {
       <option value="rent">For Rent</option>
       <option value="lease">For Lease</option>
       <option value="bnb">For BnB</option>
-    </select>
+    </select><br>
 
     <select id="filterLocation">
       <option value="">All Counties</option>
      
  <option value="Mombasa">Mombasa</option><option value="Kwale">Kwale</option><option value="Kilifi">Kilifi</option><option value="Tana River">Tana River</option><option value="Lamu">Lamu</option><option value="Taita-Taveta">Taita-Taveta</option><option value="Garissa">Garissa</option><option value="Wajir">Wajir</option><option value="Mandera">Mandera</option><option value="Marsabit">Marsabit</option><option value="Isiolo">Isiolo</option><option value="Meru">Meru</option><option value="Tharaka-Nithi">Tharaka-Nithi</option><option value="Embu">Embu</option><option value="Kitui">Kitui</option><option value="Machakos">Machakos</option><option value="Makueni">Makueni</option><option value="Nyandarua">Nyandarua</option><option value="Nyeri">Nyeri</option><option value="Kirinyaga">Kirinyaga</option><option value="Murang'a">Murang'a</option><option value="Kiambu">Kiambu</option><option value="Turkana">Turkana</option><option value="West Pokot">West Pokot</option><option value="Samburu">Samburu</option><option value="Trans Nzoia">Trans Nzoia</option><option value="Uasin Gishu">Uasin Gishu</option><option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option><option value="Nandi">Nandi</option><option value="Baringo">Baringo</option><option value="Laikipia">Laikipia</option><option value="Nakuru">Nakuru</option><option value="Narok">Narok</option><option value="Kajiado">Kajiado</option><option value="Kericho">Kericho</option><option value="Bomet">Bomet</option><option value="Kakamega">Kakamega</option><option value="Vihiga">Vihiga</option><option value="Bungoma">Bungoma</option><option value="Busia">Busia</option><option value="Siaya">Siaya</option><option value="Kisumu">Kisumu</option><option value="Homa Bay">Homa Bay</option><option value="Migori">Migori</option><option value="Kisii">Kisii</option><option value="Nyamira">Nyamira</option><option value="Nairobi">Nairobi</option>
-    </select>
+    </select><br>
      
-    <input type="number" id="minPrice" placeholder="Min KES" />
-    <input type="number" id="maxPrice" placeholder="Max KES" />
+    <input type="number" id="minPrice" placeholder="Min KES" /><br>
+    <input type="number" id="maxPrice" placeholder="Max KES" /><br>
     <button onclick="loadListings()">Apply Filters</button>
   </div>
 </div>
