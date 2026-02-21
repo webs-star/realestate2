@@ -69,6 +69,7 @@ h2 {
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   justify-items: center;
+  margin-top: 40px;
 }
 
 @media (max-width: 800px) {
@@ -88,7 +89,7 @@ h2 {
   background: #fff;
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
   display: flex;
-  flex-direction: column; /* ✅ Make it vertical */
+  flex-direction: column;
   gap: 15px;
   overflow: hidden;
   transition: transform 0.3s ease;
@@ -99,20 +100,25 @@ h2 {
 }
 
 /* =========================
-   IMAGE COLUMN
+   IMAGE / CAROUSEL
 ========================= */
-.image-column {
+.carousel {
   width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
 }
-.image-column img {
+
+.carousel img {
   width: 100%;
-  height: auto; /* or a fixed height if you want */
+  height: auto;
+  display: block;
   object-fit: cover;
   border-radius: 12px;
   transition: transform 0.3s ease;
 }
 
-.image-column img:hover {
+.carousel img:hover {
   transform: scale(1.02);
 }
 
@@ -132,6 +138,7 @@ h2 {
 
 .card-details .bold-info {
   font-weight: bold;
+  font-size: 1.1em;
 }
 
 /* =========================
@@ -145,7 +152,17 @@ ul.description {
   border-radius: 8px;
   max-height: 200px;
   overflow-y: auto;
+  color: #000;
 }
+
+/* =========================
+   TEXT COLORS
+========================= */
+.bold-info { font-weight: bold; font-size: 1.2em; }
+.type      { color: #007BFF; }
+.purpose   { color: #28A745; }
+.location  { color: #6F42C1; }
+.price     { color: #DC3545; }
 
 /* =========================
    BUTTONS
@@ -202,22 +219,20 @@ ul.description {
 ========================= */
 @media (max-width: 768px) {
   .listing-card {
-    flex-direction: column; /* no longer needed if default is column */
+    flex-direction: column;
   }
 
-  .image-column,
+  .carousel,
   .card-details {
     max-width: 100%;
     flex: unset;
   }
-}
 
   .card-details button {
     margin-top: 10px;
   }
 }
-
-</style> 
+</style>
 </head>
 <body>
 
