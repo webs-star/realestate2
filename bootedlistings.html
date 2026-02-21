@@ -380,12 +380,17 @@ else if (!hasValidStoredAccess) {
     },
     () => alert("Location access denied.")
   );
+
+ 
+ 
+ 
+
 function loadListings() {
   const filterType = document.getElementById("filterType").value;
   const filterLocation = document.getElementById("filterLocation").value;
   const filterPurpose = document.getElementById("filterPurpose").value.toLowerCase().trim();
 
-db.ref("topListings").once("value", snapshot => {
+  db.ref("topListings").once("value", snapshot => {
     const data = snapshot.val();
     const listingsDiv = document.getElementById("listings");
     listingsDiv.innerHTML = "";
@@ -400,9 +405,6 @@ db.ref("topListings").once("value", snapshot => {
     );
 
     for (const [id, item] of sortedEntries) {
-
-      // ✅ SHOW ONLY ACTIVE + BOOSTED
-     
 
       const itemType = (item.type || "").toLowerCase().trim();
       const itemLocation = (item.location || "").toLowerCase().trim();
@@ -424,90 +426,98 @@ db.ref("topListings").once("value", snapshot => {
         filterPurpose === "" || itemPurpose === filterPurpose;
 
       if (!typeMatch || !purposeMatch || !locationMatch) continue;
-const card = document.createElement("div");
-card.className = "listing-card";
 
-const imageDiv = document.createElement("div");
-imageDiv.className = "card-image";
+      const card = document.createElement("div");
+      card.className = "listing-card";
 
-const detailsDiv = document.createElement("div");
-detailsDiv.className = "card-details";
+      const imageDiv = document.createElement("div");
+      imageDiv.className = "card-image";
 
-// IMAGE (no cut)
-const imageArray = Array.isArray(item.images) ? item.images : [];
-if (imageArray.length > 0) {
-  const img = document.createElement("img");
-  img.src = imageArray[0];
-  imageDiv.appendChild(img);
+      const detailsDiv = document.createElement("div");
+      detailsDiv.className = "card-details";
 
-  let index = 0;
-  if (imageArray.length > 1) {
-    setInterval(() => {
-      index = (index + 1) % imageArray.length;
-      img.style.opacity = 0;
-      setTimeout(() => {
-        img.src = imageArray[index];
-        img.style.opacity = 1;
-      }, 500);
-    }, 5000);
-  }
-}
+      // IMAGE (no cut)
+      const imageArray = Array.isArray(item.images) ? item.images : [];
+      if (imageArray.length > 0) {
+        const img = document.createElement("img");
+        img.src = imageArray[0];
+        imageDiv.appendChild(img);
 
-// DETAILS
-detailsDiv.innerHTML = `
-  <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
-  <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
-  <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
-  <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
-  <ul class="description">
-    ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
-  </ul>
-`;
+        let index = 0;
+        if (imageArray.length > 1) {
+          setInterval(() => {
+            index = (index + 1) % imageArray.length;
+            img.style.opacity = 0;
+            setTimeout(() => {
+              img.src = imageArray[index];
+              img.style.opacity = 1;
+            }, 500);
+          }, 5000);
+        }
+      }
 
-// WHATSAPP BUTTON (first)
-const chatBtn = document.createElement("button");
-chatBtn.textContent = "💬 Contact the Owner or Agent";
-chatBtn.style.background = "#25D366";
-chatBtn.style.color = "white";
-chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
-detailsDiv.appendChild(chatBtn);
+      // DAYS SINCE VERIFICATION
+      const daysAgo = Math.floor(
+        (Date.now() - (item.timestamp || 0)) / (1000 * 60 * 60 * 24)
+      );
 
-// MAP BUTTON (below WhatsApp)
-const mapId = "map-" + id;
-const mapContainer = document.createElement("div");
-mapContainer.id = mapId;
-mapContainer.className = "map-container";
+      // DETAILS WITH AVAILABILITY LINE
+      detailsDiv.innerHTML = `
+        <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
+        <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
+        <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
+        <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
 
-const mapBtn = document.createElement("button");
-mapBtn.textContent = "📍 Show Live Directions To The Property";
-mapBtn.style.background = "#0056b3";
-mapBtn.style.color = "white";
+        <p style="font-size:13px; color:#0aa83f;">
+          ✅ Available – Verified ${daysAgo} day(s) ago
+        </p>
 
-mapBtn.onclick = () => {
-  if (mapContainer.style.display === "block") {
-    mapContainer.style.display = "none";
-    return;
-  }
+        <ul class="description">
+          ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
+        </ul>
+      `;
 
-  mapContainer.style.display = "block";
+      // WHATSAPP BUTTON
+      const chatBtn = document.createElement("button");
+      chatBtn.textContent = "💬 Contact the Owner or Agent";
+      chatBtn.style.background = "#25D366";
+      chatBtn.style.color = "white";
+      chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
+      detailsDiv.appendChild(chatBtn);
 
-  // Wait for DOM repaint
-  requestAnimationFrame(() => {
-    showMapForListing(item.lat, item.lng, mapId);
-  });
-};
+      // MAP BUTTON
+      const mapId = "map-" + id;
+      const mapContainer = document.createElement("div");
+      mapContainer.id = mapId;
+      mapContainer.className = "map-container";
 
-detailsDiv.appendChild(mapBtn);
-card.appendChild(imageDiv);
-card.appendChild(detailsDiv);
-card.appendChild(mapContainer);
+      const mapBtn = document.createElement("button");
+      mapBtn.textContent = "📍 Show Live Directions To The Property";
+      mapBtn.style.background = "#0056b3";
+      mapBtn.style.color = "white";
 
-listingsDiv.appendChild(card);
+      mapBtn.onclick = () => {
+        if (mapContainer.style.display === "block") {
+          mapContainer.style.display = "none";
+          return;
+        }
+
+        mapContainer.style.display = "block";
+
+        requestAnimationFrame(() => {
+          showMapForListing(item.lat, item.lng, mapId);
+        });
+      };
+
+      detailsDiv.appendChild(mapBtn);
+      card.appendChild(imageDiv);
+      card.appendChild(detailsDiv);
+      card.appendChild(mapContainer);
+
+      listingsDiv.appendChild(card);
     }
   });
 }
-
-
 
 function showMapForListing(destLat, destLng, containerId) {
     const container = document.getElementById(containerId);
