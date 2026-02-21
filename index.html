@@ -88,7 +88,7 @@ h2 {
   background: #fff;
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
   display: flex;
-  flex-direction: row;
+  flex-direction: column; /* ✅ Make it vertical */
   gap: 15px;
   overflow: hidden;
   transition: transform 0.3s ease;
@@ -102,13 +102,11 @@ h2 {
    IMAGE COLUMN
 ========================= */
 .image-column {
-  flex: 3;
-  max-width: 70%;
+  width: 100%;
 }
-
 .image-column img {
   width: 100%;
-  height: 320px;
+  height: auto; /* or a fixed height if you want */
   object-fit: cover;
   border-radius: 12px;
   transition: transform 0.3s ease;
@@ -204,7 +202,7 @@ ul.description {
 ========================= */
 @media (max-width: 768px) {
   .listing-card {
-    flex-direction: column;
+    flex-direction: column; /* no longer needed if default is column */
   }
 
   .image-column,
@@ -212,6 +210,7 @@ ul.description {
     max-width: 100%;
     flex: unset;
   }
+}
 
   .card-details button {
     margin-top: 10px;
