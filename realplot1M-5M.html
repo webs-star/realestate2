@@ -70,94 +70,141 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
 
-
-  <style>
-    body { font-family: Arial; background: #f4f4f4; padding: 20px; }
-    h2 {
-      text-align: center;
-      background: #0056b3;
-      color: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    .card, .filters {
-      background: white; padding: 20px; border-radius: 8px;
-      box-shadow: 0 2px 6px #ccc; max-width: 800px; margin: 20px auto;
-    }
-    input, select, button {
-      width: 100%; margin-top: 10px; padding: 10px;
-    }
-    img.property {
-      width: 100%; margin-bottom: 10px; border-radius: 10px;
-    }
-   
-   
-  #listings {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 40px;
+<style>
+/* =========================
+   GLOBAL
+========================= */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
 }
 
-.listing-card {
-  background: #fff;
+h2 {
+  text-align: center;
+  background: #0056b3;
+  color: white;
+  padding: 15px;
   border-radius: 10px;
-  padding: 10px;
-  width: 300px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-.image-column {
+.card,
+.filters {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+/* =========================
+   LISTINGS GRID (2 columns)
+========================= */
+#listings {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  justify-items: center;
+}
+
+@media (max-width: 800px) {
+  #listings {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   LISTING CARD
+========================= */
+.listing-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 15px;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  margin-bottom: 8px;
+  gap: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.listing-card:hover {
+  transform: translateY(-5px);
+}
+
+/* =========================
+   IMAGE COLUMN
+========================= */
+.image-column {
+  width: 100%;
 }
 
 .image-column img {
   width: 100%;
-  height: 100px;
+  height: auto;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
 }
 
-.listing-card h4,
-.listing-card p {
-  margin: 2px 0;
-  padding: 0;
-  font-size: 14px;
+.image-column img:hover {
+  transform: scale(1.02);
 }
 
-ul.description {
-  background: #f0f0f0;
-  border-radius: 5px;
-  font-size: 13px;
-  line-height: 1.4;
-  padding: 6px 10px;
+/* =========================
+   DETAILS COLUMN (bigger text)
+========================= */
+.card-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-details p {
   margin: 6px 0;
-  color: #000;
+  font-size: 17px; /* ⬆ bigger text */
+}
 
-  max-height: 200px;
+.card-details .bold-info {
+  font-weight: bold;
+  font-size: 18px; /* ⬆ bigger bold text */
+}
+
+/* =========================
+   DESCRIPTION BOX (bigger text)
+========================= */
+ul.description {
+  font-size: 22px; /* ⬆ bigger description text */
+  line-height: 1.6;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  max-height: 230px;
   overflow-y: auto;
 }
 
-.listing-card button {
-  padding: 6px 10px;
+/* =========================
+   BUTTONS
+========================= */
+.card-details button {
+  padding: 10px 14px;
   border: none;
-  border-radius: 5px;
-  font-size: 13px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 18px; /* ⬆ bigger button text */
   cursor: pointer;
-  margin-top: 4px;
+  background: #0aa83f;
+  color: white;
+  margin-top: 12px;
 }
 
 .edit-btn {
   background: #28a745;
   color: white;
-  margin-right: 6px;
 }
 
 .delete-btn {
@@ -165,18 +212,53 @@ ul.description {
   color: white;
 }
 
- 
-    .bold-info {
-    font-weight: bold;
-    font-size: 1.2em;
+/* =========================
+   CAROUSEL DOTS
+========================= */
+.carousel-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+}
+
+.carousel-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.carousel-dots span.active {
+  opacity: 1;
+  background: #0aa83f;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .listing-card {
+    flex-direction: column;
   }
 
-  .type    { color: #007BFF; }  /* Blue */
-  .purpose { color: #28A745; }  /* Green */
-  .location { color: #6F42C1; } /* Purple */
-  .price   { color: #DC3545; }  /* Red */
-  .contact { color: #FFC107; } /* Yellow/Orange */
-  </style>
+  .image-column,
+  .card-details {
+    max-width: 100%;
+    flex: unset;
+  }
+
+  .card-details button {
+    margin-top: 12px;
+  }
+}
+</style>
+
+ 
 </head>
 <body>
 
@@ -321,6 +403,9 @@ else if (!hasValidStoredAccess) {
     },
     () => alert("Location access denied.")
   );
+
+
+
 function loadListings() {
   const filterType = document.getElementById("filterType").value;
   const filterLocation = document.getElementById("filterLocation").value;
@@ -339,11 +424,7 @@ function loadListings() {
     const sortedEntries = Object.entries(data).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
 
     for (const [id, item] of sortedEntries) {
-     if (item.price < 1000000 || item.price > 5000000) continue; // ✅ Only 100k–500k
-
-
-
-      const itemType = (item.type || "").toLowerCase().trim();
+       if (item.price < 1000000 || item.price > 5000000) continue; 
       const itemLocation = (item.location || "").toLowerCase().trim();
       const itemPurpose = (item.purpose || "").toLowerCase().trim();
       const filterTypeVal = filterType.toLowerCase().trim();
@@ -357,64 +438,80 @@ function loadListings() {
 
       if (!typeMatch || !purposeMatch || !locationMatch) continue;
 
-      // ✅ Render card (same as original)
+      const daysAgo = Math.floor((Date.now() - (item.lastConfirmed || item.timestamp || Date.now())) / (1000 * 60 * 60 * 24));
+
+      // CARD
       const card = document.createElement("div");
       card.className = "listing-card";
-      card.innerHTML = `
-        <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
-        <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
-        <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
-        <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
-        <ul class="description">
-          ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
-        </ul>
-        <p><strong>Contact:</strong> <span class="bold-info contact">${item.contact}</span></p>
-      `;
+
+      // IMAGE COLUMN
+      const imageColumn = document.createElement("div");
+      imageColumn.className = "image-column";
 
       const imageArray = Array.isArray(item.images) ? item.images : [];
       if (imageArray.length > 0) {
         const img = document.createElement("img");
         img.src = imageArray[0];
-        img.className = "property";
-        img.style.transition = "opacity 0.5s ease-in-out";
-        card.appendChild(img);
+        imageColumn.appendChild(img);
 
         let index = 0;
         setInterval(() => {
           index = (index + 1) % imageArray.length;
-          img.style.opacity = 0;
-          setTimeout(() => {
-            img.src = imageArray[index];
-            img.style.opacity = 1;
-          }, 500);
+          img.src = imageArray[index];
         }, 5000);
       }
 
-      const mapId = "map-" + id;
-      const btn = document.createElement("button");
-      btn.textContent = "📍 Show Directions";
-      btn.onclick = () => showMapForListing(item.lat, item.lng, mapId);
+      card.appendChild(imageColumn);
 
+      // DETAILS COLUMN
+      const details = document.createElement("div");
+      details.className = "card-details";
+
+      details.innerHTML = `
+        <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
+        <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
+        <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
+        <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
+
+        <p style="font-size:13px; color:#0aa83f;">
+          ✅ Available – Verified ${daysAgo} day(s) ago
+        </p>
+
+        <ul class="description">
+          ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
+        </ul>
+      `;
+
+      // CONTACT BUTTON (free)
       const chatBtn = document.createElement("button");
-      chatBtn.textContent = "💬 Chat with Landlord/Landowner/Agent";
-      chatBtn.style.background = "#ff9800";
+      chatBtn.textContent = "💬 Contact Owner (Free)";
+      chatBtn.style.background = "#0aa83f";
       chatBtn.style.color = "white";
-      chatBtn.style.marginTop = "5px";
-      chatBtn.style.borderRadius = "5px";
       chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
+
+      // MAP BUTTON (free directions)
+      const mapId = "map-" + id;
+      const mapBtn = document.createElement("button");
+      mapBtn.textContent = "📍 Open Live Map (Free Directions)";
+      mapBtn.style.background = "#0056b3";
+      mapBtn.style.color = "white";
+      mapBtn.onclick = () => showMapForListing(item.lat, item.lng, mapId);
 
       const mapDiv = document.createElement("div");
       mapDiv.id = mapId;
 
-      card.appendChild(btn);
-      card.appendChild(chatBtn);
-      card.appendChild(mapDiv);
+      details.appendChild(chatBtn);
+      details.appendChild(mapBtn);
+      details.appendChild(mapDiv);
+      card.appendChild(details);
+
       listingsDiv.appendChild(card);
     }
   });
 }
 
 
+ 
 function showMapForListing(destLat, destLng, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = "";
