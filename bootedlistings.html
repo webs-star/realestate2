@@ -483,12 +483,17 @@ mapBtn.style.background = "#0056b3";
 mapBtn.style.color = "white";
 
 mapBtn.onclick = () => {
+  if (mapContainer.style.display === "block") {
+    mapContainer.style.display = "none";
+    return;
+  }
+
   mapContainer.style.display = "block";
 
-  // Small delay ensures DOM and container are ready
-  setTimeout(() => {
+  // Wait for DOM repaint
+  requestAnimationFrame(() => {
     showMapForListing(item.lat, item.lng, mapId);
-  }, 200);
+  });
 };
 
 detailsDiv.appendChild(mapBtn);
@@ -616,7 +621,11 @@ function showMapForListing(destLat, destLng, containerId) {
             const accuracyMeters = pos.coords.accuracy;
 
             // 1. Initialize the map now that we have a location
-            map = L.map(mapDiv).setView(userLatLng, 15);
+           map = L.map(mapDiv).setView(userLatLng, 15);
+
+setTimeout(() => {
+  map.invalidateSize();
+}, 300);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
             L.marker(destinationLatLng).addTo(map).bindPopup("Listing Location");
