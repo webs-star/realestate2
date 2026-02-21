@@ -476,9 +476,12 @@ if (imageArray.length > 0) {
       const mapDiv = document.createElement("div");
       mapDiv.id = mapId;
 
-      card.appendChild(mapBtn);
-      card.appendChild(chatBtn);
-      card.appendChild(mapDiv);
+     // Add buttons inside details panel instead
+detailsDiv.appendChild(mapBtn);
+detailsDiv.appendChild(chatBtn);
+detailsDiv.appendChild(mapDiv);
+
+// Now build card structure correctly
 card.appendChild(imageDiv);
 card.appendChild(detailsDiv);
 
