@@ -127,13 +127,14 @@
   background: #fafafa;
 }
 
-/* MAP (hidden until click) */
 .map-container {
   width: 100%;
-  height: 320px;
+  min-height: 320px; /* Change 'height' to 'min-height' */
+  height: auto;      /* Allow it to grow */
   display: none;
   margin-top: 10px;
   border-radius: 8px;
+  overflow: visible; /* Ensure text isn't cut off */
 }
 
 /* MOBILE ONE COLUMN */
