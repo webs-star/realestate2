@@ -99,36 +99,41 @@
   justify-content: center;
 }
 
-/* CARD TWO COLUMNS */
 .listing-card {
-  background: white;
+  background: #fff;
   border-radius: 12px;
   width: calc(50% - 20px);
-  display: flex;
-  flex-direction: column;
   box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  display: flex;
   overflow: hidden;
+  min-height: 180px;   /* smaller card */
 }
 
-
-  .card-image {
-  width: 100%;
+/* IMAGE AREA */
+.card-image {
+  flex: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
 }
 
 .card-image img {
   width: 100%;
-  height: auto;          /* no cropping */
-  display: block;
-  object-fit: contain;   /* ensures full image */
-} 
-
-/* DETAILS (1/4) */
-.card-details {
-  padding: 12px;
-  background: #fafafa;
-  font-size: 13px;
+  height: 180px;          /* fixed height */
+  object-fit: contain;    /* show full image */
+  border-radius: 6px;
 }
 
+/* DETAILS AREA */
+.card-details {
+  flex: 1;
+  padding: 10px;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+}
+   
 /* MAP BELOW IMAGE (FULL WIDTH) */
 .map-container {
   width: 100%;
