@@ -421,96 +421,69 @@ function loadListings() {
       return;
     }
 
-    const sortedEntries = Object.entries(data).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
+    const now = Date.now();
+    const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+
+    const sortedEntries = Object.entries(data)
+      .sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
 
     for (const [id, item] of sortedEntries) {
-       if (item.price < 1000000 || item.price > 5000000) continue; 
+
+      // ✅ 1. Price filter
+      const price = Number(item.price);
+      if (price < 1000000 || price > 5000000) continue;
+
+      // ✅ 2. Must be ACTIVE
+      if (item.status !== "active") continue;
+
+      // ✅ 3. Must be verified within 30 days
+      const lastVerified = item.lastConfirmed || item.timestamp;
+      if (!lastVerified || (now - lastVerified > THIRTY_DAYS)) continue;
+
+      const itemType = (item.type || "").toLowerCase().trim();
       const itemLocation = (item.location || "").toLowerCase().trim();
       const itemPurpose = (item.purpose || "").toLowerCase().trim();
+
       const filterTypeVal = filterType.toLowerCase().trim();
       const filterLoc = filterLocation.toLowerCase().trim();
 
       const itemLocationWords = itemLocation.split(/[\s,-]+/);
       const filterWords = filterLoc.split(/[\s,-]+/);
-      const locationMatch = filterLoc === "" || filterWords.some(word => itemLocationWords.includes(word));
-      const typeMatch = filterType === "" || itemType.includes(filterTypeVal);
-      const purposeMatch = filterPurpose === "" || itemPurpose === filterPurpose;
+
+      const locationMatch =
+        filterLoc === "" ||
+        filterWords.some(word => itemLocationWords.includes(word));
+
+      const typeMatch =
+        filterType === "" ||
+        itemType.includes(filterTypeVal);
+
+      const purposeMatch =
+        filterPurpose === "" ||
+        itemPurpose === filterPurpose;
 
       if (!typeMatch || !purposeMatch || !locationMatch) continue;
 
-      const daysAgo = Math.floor((Date.now() - (item.lastConfirmed || item.timestamp || Date.now())) / (1000 * 60 * 60 * 24));
-
-      // CARD
+      // ✅ Render Card
       const card = document.createElement("div");
       card.className = "listing-card";
-
-      // IMAGE COLUMN
-      const imageColumn = document.createElement("div");
-      imageColumn.className = "image-column";
-
-      const imageArray = Array.isArray(item.images) ? item.images : [];
-      if (imageArray.length > 0) {
-        const img = document.createElement("img");
-        img.src = imageArray[0];
-        imageColumn.appendChild(img);
-
-        let index = 0;
-        setInterval(() => {
-          index = (index + 1) % imageArray.length;
-          img.src = imageArray[index];
-        }, 5000);
-      }
-
-      card.appendChild(imageColumn);
-
-      // DETAILS COLUMN
-      const details = document.createElement("div");
-      details.className = "card-details";
-
-      details.innerHTML = `
+      card.innerHTML = `
         <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
         <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
         <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
         <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
-
-        <p style="font-size:13px; color:#0aa83f;">
-          ✅ Available – Verified ${daysAgo} day(s) ago
-        </p>
-
         <ul class="description">
           ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
         </ul>
+        <p><strong>Contact:</strong> <span class="bold-info contact">${item.contact}</span></p>
       `;
-
-      // CONTACT BUTTON (free)
-      const chatBtn = document.createElement("button");
-      chatBtn.textContent = "💬 Contact Owner (Free)";
-      chatBtn.style.background = "#0aa83f";
-      chatBtn.style.color = "white";
-      chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
-
-      // MAP BUTTON (free directions)
-      const mapId = "map-" + id;
-      const mapBtn = document.createElement("button");
-      mapBtn.textContent = "📍 Open Live Map (Free Directions)";
-      mapBtn.style.background = "#0056b3";
-      mapBtn.style.color = "white";
-      mapBtn.onclick = () => showMapForListing(item.lat, item.lng, mapId);
-
-      const mapDiv = document.createElement("div");
-      mapDiv.id = mapId;
-
-      details.appendChild(chatBtn);
-      details.appendChild(mapBtn);
-      details.appendChild(mapDiv);
-      card.appendChild(details);
 
       listingsDiv.appendChild(card);
     }
   });
 }
 
-
+ 
  
 function showMapForListing(destLat, destLng, containerId) {
     const container = document.getElementById(containerId);
