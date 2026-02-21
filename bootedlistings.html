@@ -92,55 +92,60 @@
       width: 100%; margin-bottom: 10px; border-radius: 10px;
     }
  
-
 #listings {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 20px;
-  margin-top: 40px;
+  justify-content: center;
 }
 
-/* TWO COLUMNS */
+/* CARD TWO COLUMNS */
 .listing-card {
-  background: #fff;
+  background: white;
   border-radius: 12px;
-  width: calc(50% - 20px); /* 2 per row */
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  width: calc(50% - 20px);
   display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
   overflow: hidden;
-  min-height: 250px;
 }
 
-/* LEFT SIDE – IMAGE (75%) */
+/* IMAGE AREA (3/4) */
 .card-image {
-  flex: 3;
-  height: 250px;
+  width: 100%;
+  height: 320px; /* big image */
 }
 
 .card-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* prevents cutting */
 }
 
-/* RIGHT SIDE – DETAILS (25%) */
+/* DETAILS (1/4) */
 .card-details {
-  flex: 1;
   padding: 12px;
   background: #fafafa;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   font-size: 13px;
 }
 
-/* MOBILE = ONE COLUMN */
+/* MAP BELOW IMAGE (FULL WIDTH) */
+.map-container {
+  width: 100%;
+  height: 300px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+/* MOBILE ONE COLUMN */
 @media (max-width: 900px) {
   .listing-card {
     width: 100%;
-    flex-direction: column;
   }
+  .card-image {
+    height: 240px;
+  }
+
 
   .card-image,
   .card-details {
@@ -420,81 +425,72 @@ db.ref("topListings").once("value", snapshot => {
 
       if (!typeMatch || !purposeMatch || !locationMatch) continue;
 
-      const card = document.createElement("div");
+     const card = document.createElement("div");
 card.className = "listing-card";
 
+// IMAGE SECTION (3/4)
 const imageDiv = document.createElement("div");
 imageDiv.className = "card-image";
 
 const detailsDiv = document.createElement("div");
 detailsDiv.className = "card-details";
 
+const imageArray = Array.isArray(item.images) ? item.images : [];
+
+if (imageArray.length > 0) {
+  const img = document.createElement("img");
+  img.src = imageArray[0];
+  imageDiv.appendChild(img);
+
+  let index = 0;
+  if (imageArray.length > 1) {
+    setInterval(() => {
+      index = (index + 1) % imageArray.length;
+      img.style.opacity = 0;
+      setTimeout(() => {
+        img.src = imageArray[index];
+        img.style.opacity = 1;
+      }, 500);
+    }, 5000);
+  }
+}
+
+// DETAILS (1/4)
 detailsDiv.innerHTML = `
   <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
   <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
   <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
   <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
   <ul class="description">
-    ${(item.description || "")
-      .split("\n")
-      .map(line => `<li>${line}</li>`)
-      .join("")}
+    ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
   </ul>
 `;
 
+// MAP BELOW IMAGE (BIG)
+const mapId = "map-" + id;
+const mapDiv = document.createElement("div");
+mapDiv.id = mapId;
+mapDiv.className = "map-container";
 
-const imageArray = Array.isArray(item.images) ? item.images : [];
+const mapBtn = document.createElement("button");
+mapBtn.textContent = "📍 Show Directions";
+mapBtn.onclick = () => showMapForListing(item.lat, item.lng, mapId);
 
-if (imageArray.length > 0) {
-  const img = document.createElement("img");
-  img.src = imageArray[0];
-  img.style.transition = "opacity 0.5s ease-in-out";
+const chatBtn = document.createElement("button");
+chatBtn.textContent = "💬 Chat via WhatsApp";
+chatBtn.style.background = "#25D366";
+chatBtn.style.color = "white";
+chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
 
-  imageDiv.appendChild(img);
-
- let index = 0;
-
-if (imageArray.length > 1) {
-  setInterval(() => {
-    index = (index + 1) % imageArray.length;
-    img.style.opacity = 0;
-    setTimeout(() => {
-      img.src = imageArray[index];
-      img.style.opacity = 1;
-    }, 500);
-  }, 5000);
-}
-     
-}
-      // ✅ MAP BUTTON
-      const mapId = "map-" + id;
-
-      const mapBtn = document.createElement("button");
-      mapBtn.textContent = "📍 Show Directions";
-      mapBtn.onclick = () =>
-        showMapForListing(item.lat, item.lng, mapId);
-
-      // ✅ WHATSAPP BUTTON
-      const chatBtn = document.createElement("button");
-      chatBtn.textContent = "💬 Chat via WhatsApp";
-      chatBtn.style.background = "#25D366";
-      chatBtn.style.color = "white";
-      chatBtn.onclick = () =>
-        openChat(item.contact, item.location, item.type, id);
-
-      const mapDiv = document.createElement("div");
-      mapDiv.id = mapId;
-
-    
-detailsDiv.appendChild(mapBtn);
-detailsDiv.appendChild(chatBtn);
-detailsDiv.appendChild(mapDiv);
-
-
+// ORDER: image → map → details (or adjust)
 card.appendChild(imageDiv);
+card.appendChild(mapDiv);
 card.appendChild(detailsDiv);
 
-      listingsDiv.appendChild(card);
+detailsDiv.appendChild(mapBtn);
+detailsDiv.appendChild(chatBtn);
+
+listingsDiv.appendChild(card);
     }
   });
 }
