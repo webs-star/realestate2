@@ -556,7 +556,14 @@ function showMapForListing(destLat, destLng, containerId) {
             }
         }).addTo(map);
 
-     
+        // --- Routing Error Handler (The critical fallback) ---
+        routeControl.on('routingerror', function (e) {
+            console.error("Road Routing Error:", e.error);
+            
+            // Immediately trigger straight-line fallback on failure
+            straightLineFallback(userLatLng);
+        });
+
         // --- Routing Success Handler ---
         routeControl.on('routesfound', function (e) {
             const route = e.routes[0];
@@ -581,8 +588,7 @@ function showMapForListing(destLat, destLng, containerId) {
             steps += `<em>Estimated Time:</em> **${timeMin} mins**`;
 
             directionsList.innerHTML = steps;
-});
-       
+        });
     }
 
     function straightLineFallback(userLatLng) {
@@ -615,11 +621,7 @@ function showMapForListing(destLat, destLng, containerId) {
             const accuracyMeters = pos.coords.accuracy;
 
             // 1. Initialize the map now that we have a location
-           map = L.map(mapDiv).setView(userLatLng, 15);
-
-setTimeout(() => {
-  map.invalidateSize();
-}, 300);
+            map = L.map(mapDiv).setView(userLatLng, 15);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
             L.marker(destinationLatLng).addTo(map).bindPopup("Listing Location");
@@ -693,6 +695,7 @@ function openChat(contact, location, type, listingId) {
 
   window.open(whatsappURL, "_blank");
 }
+
 
 
 
