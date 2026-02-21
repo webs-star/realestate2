@@ -557,38 +557,30 @@ function showMapForListing(destLat, destLng, containerId) {
         }).addTo(map);
 
         // --- Routing Error Handler (The critical fallback) ---
-        routeControl.on('routingerror', function (e) {
-            console.error("Road Routing Error:", e.error);
-            
-            // Immediately trigger straight-line fallback on failure
-            straightLineFallback(userLatLng);
-        });
+       routeControl.on('routesfound', function (e) {
+    const route = e.routes[0];
 
-        // --- Routing Success Handler ---
-        routeControl.on('routesfound', function (e) {
-            const route = e.routes[0];
-            const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
-            const timeMin = (route.summary.totalTime / 60).toFixed(0);
+    const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
+    const timeMin = (route.summary.totalTime / 60).toFixed(0);
 
-            let steps = `<strong>Live Step-by-Step Directions:</strong><br>`;
-            const instructions = route.instructions || [];
+    let steps = "<strong>Live Step-by-Step Directions:</strong><br>";
 
-            const formatter = new L.Routing.Formatter();
-            if (instructions.length === 0 && route.instructions === undefined) {
-                route.instructions = formatter._getInstructions.call({options:{}}, route);
+    if (route.instructions && route.instructions.length > 0) {
+        for (const step of route.instructions) {
+            if (step.instruction) {
+                steps += `➡️ ${step.instruction} (${(step.distance / 1000).toFixed(2)} km)<br>`;
             }
+        }
+    } else {
+        steps += "<em>No step instructions available.</em>";
+    }
 
-            for (const step of route.instructions || []) {
-                if (step.text) {
-                    steps += `➡️ ${step.text} (${(step.distance / 1000).toFixed(2)} km)<br>`;
-                }
-            }
+    steps += `<br><em>Total Distance:</em> **${distanceKm} km**<br>`;
+    steps += `<em>Estimated Time:</em> **${timeMin} mins**`;
 
-            steps += `<br><em>Total Distance:</em> **${distanceKm} km**<br>`;
-            steps += `<em>Estimated Time:</em> **${timeMin} mins**`;
-
-            directionsList.innerHTML = steps;
-        });
+    directionsList.innerHTML = steps;
+});
+        
     }
 
     function straightLineFallback(userLatLng) {
