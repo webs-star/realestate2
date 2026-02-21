@@ -556,30 +556,31 @@ function showMapForListing(destLat, destLng, containerId) {
             }
         }).addTo(map);
 
-       routeControl.on('routesfound', function (e) {
-    const route = e.routes[0];
+     
+        // --- Routing Success Handler ---
+        routeControl.on('routesfound', function (e) {
+            const route = e.routes[0];
+            const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
+            const timeMin = (route.summary.totalTime / 60).toFixed(0);
 
-    const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
-    const timeMin = (route.summary.totalTime / 60).toFixed(0);
+            let steps = `<strong>Live Step-by-Step Directions:</strong><br>`;
+            const instructions = route.instructions || [];
 
-    let stepsHTML = `<strong>Live Step-by-Step Directions:</strong><br><br>`;
-
-    if (route.legs && route.legs.length > 0) {
-        const steps = route.legs[0].steps;
-
-        steps.forEach(step => {
-            if (step.instruction) {
-                stepsHTML += `➡️ ${step.instruction} (${(step.distance / 1000).toFixed(2)} km)<br>`;
+            const formatter = new L.Routing.Formatter();
+            if (instructions.length === 0 && route.instructions === undefined) {
+                route.instructions = formatter._getInstructions.call({options:{}}, route);
             }
-        });
-    } else {
-        stepsHTML += "Step details unavailable.<br>";
-    }
 
-    stepsHTML += `<br><strong>Total Distance:</strong> ${distanceKm} km<br>`;
-    stepsHTML += `<strong>Estimated Time:</strong> ${timeMin} mins`;
+            for (const step of route.instructions || []) {
+                if (step.text) {
+                    steps += `➡️ ${step.text} (${(step.distance / 1000).toFixed(2)} km)<br>`;
+                }
+            }
 
-    directionsList.innerHTML = stepsHTML;
+            steps += `<br><em>Total Distance:</em> **${distanceKm} km**<br>`;
+            steps += `<em>Estimated Time:</em> **${timeMin} mins**`;
+
+            directionsList.innerHTML = steps;
 });
        
     }
