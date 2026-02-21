@@ -326,7 +326,7 @@ function loadListings() {
   const filterLocation = document.getElementById("filterLocation").value;
   const filterPurpose = document.getElementById("filterPurpose").value.toLowerCase().trim();
 
-  db.ref("listings").once("value", snapshot => {
+db.ref("topListings").once("value", snapshot => {
     const data = snapshot.val();
     const listingsDiv = document.getElementById("listings");
     listingsDiv.innerHTML = "";
@@ -343,7 +343,7 @@ function loadListings() {
     for (const [id, item] of sortedEntries) {
 
       // ✅ SHOW ONLY ACTIVE + BOOSTED
-      if (!item.active || !item.boosted) continue;
+     
 
       const itemType = (item.type || "").toLowerCase().trim();
       const itemLocation = (item.location || "").toLowerCase().trim();
