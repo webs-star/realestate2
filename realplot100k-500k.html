@@ -434,7 +434,7 @@ function loadListings() {
   const lastVerified = Number(item.lastConfirmed || item.timestamp);
 
   if (!lastVerified || (now - lastVerified > THIRTY_DAYS)) continue;
-      if (item.price < 1000000 || item.price > 5000000) continue; // Only 100k – 500k
+      if (item.price < 100000 || item.price > 500000) continue; // Only 100k – 500k
 
       const itemType = (item.type || "").toLowerCase().trim();
       const itemLocation = (item.location || "").toLowerCase().trim();
