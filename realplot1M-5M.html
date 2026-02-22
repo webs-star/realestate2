@@ -421,7 +421,18 @@ function loadListings() {
 
     const sortedEntries = Object.entries(data).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
 
-    for (const [id, item] of sortedEntries) {
+   for (const [id, item] of sortedEntries) {
+
+  // ✅ Only ACTIVE listings
+  const status = (item.status || "").toLowerCase().trim();
+  if (status !== "active") continue;
+
+  // ✅ Only verified within 30 days
+  const now = Date.now();
+  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+  const lastVerified = Number(item.lastConfirmed || item.timestamp);
+
+  if (!lastVerified || (now - lastVerified > THIRTY_DAYS)) continue;
       if (item.price < 1000000 || item.price > 5000000) continue; // Only 100k – 500k
 
       const itemType = (item.type || "").toLowerCase().trim();
