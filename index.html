@@ -227,6 +227,66 @@ ul.description {
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
+
+
+
+/* =========================
+   MODERN FILTER STYLING
+========================= */
+
+.filters h3 {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 18px;
+  color: #0056b3;
+  font-weight: 600;
+}
+
+.filters select,
+.filters input {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  font-size: 15px;
+  background: #f9fafc;
+  transition: all 0.25s ease;
+  min-width: 150px;
+  outline: none;
+}
+
+.filters select:focus,
+.filters input:focus {
+  border-color: #0056b3;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.15);
+}
+
+.filters input::placeholder {
+  color: #888;
+}
+
+.filters button {
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #0056b3, #0aa83f);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.filters button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.filters button:active {
+  transform: scale(0.97);
+}
+
+ 
 </style>
 </head>
 <body>
@@ -296,8 +356,7 @@ ul.description {
 </div>
 
 
- 
-<div class="filters">
+ <div class="filters">
   <h3>🔍 Filter Listings</h3>
   <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
     <select id="filterType">
@@ -320,28 +379,28 @@ ul.description {
       <option value="vacant land">Vacant Land</option>
       <option value="industrial">Industrial Property</option>
       <option value="resort">Resort / Hotel</option>
-    </select><br>
+    </select>
     
-    <select id="filterPurpose">
-      <option value="">All Purposes</option>
-      <option value="sale">For Sale</option>
-      <option value="rent">For Rent</option>
-      <option value="lease">For Lease</option>
-      <option value="bnb">For BnB</option>
-    </select><br>
+    
+<select id="filterPurpose">
+  <option value="">All Purposes</option>
+  <option value="sale">For Sale</option>
+  <option value="rent">For Rent</option>
+  <option value="lease">For Lease</option>
+  <option value="bnb">For BnB</option>
+</select>
 
+    
+    
     <select id="filterLocation">
       <option value="">All Counties</option>
-     
- <option value="Mombasa">Mombasa</option><option value="Kwale">Kwale</option><option value="Kilifi">Kilifi</option><option value="Tana River">Tana River</option><option value="Lamu">Lamu</option><option value="Taita-Taveta">Taita-Taveta</option><option value="Garissa">Garissa</option><option value="Wajir">Wajir</option><option value="Mandera">Mandera</option><option value="Marsabit">Marsabit</option><option value="Isiolo">Isiolo</option><option value="Meru">Meru</option><option value="Tharaka-Nithi">Tharaka-Nithi</option><option value="Embu">Embu</option><option value="Kitui">Kitui</option><option value="Machakos">Machakos</option><option value="Makueni">Makueni</option><option value="Nyandarua">Nyandarua</option><option value="Nyeri">Nyeri</option><option value="Kirinyaga">Kirinyaga</option><option value="Murang'a">Murang'a</option><option value="Kiambu">Kiambu</option><option value="Turkana">Turkana</option><option value="West Pokot">West Pokot</option><option value="Samburu">Samburu</option><option value="Trans Nzoia">Trans Nzoia</option><option value="Uasin Gishu">Uasin Gishu</option><option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option><option value="Nandi">Nandi</option><option value="Baringo">Baringo</option><option value="Laikipia">Laikipia</option><option value="Nakuru">Nakuru</option><option value="Narok">Narok</option><option value="Kajiado">Kajiado</option><option value="Kericho">Kericho</option><option value="Bomet">Bomet</option><option value="Kakamega">Kakamega</option><option value="Vihiga">Vihiga</option><option value="Bungoma">Bungoma</option><option value="Busia">Busia</option><option value="Siaya">Siaya</option><option value="Kisumu">Kisumu</option><option value="Homa Bay">Homa Bay</option><option value="Migori">Migori</option><option value="Kisii">Kisii</option><option value="Nyamira">Nyamira</option><option value="Nairobi">Nairobi</option>
-    </select><br>
-     
-    <input type="number" id="minPrice" placeholder="Min KES" /><br>
-    <input type="number" id="maxPrice" placeholder="Max KES" /><br>
+      <option value="Mombasa">Mombasa</option><option value="Kwale">Kwale</option><option value="Kilifi">Kilifi</option><option value="Tana River">Tana River</option><option value="Lamu">Lamu</option><option value="Taita-Taveta">Taita-Taveta</option><option value="Garissa">Garissa</option><option value="Wajir">Wajir</option><option value="Mandera">Mandera</option><option value="Marsabit">Marsabit</option><option value="Isiolo">Isiolo</option><option value="Meru">Meru</option><option value="Tharaka-Nithi">Tharaka-Nithi</option><option value="Embu">Embu</option><option value="Kitui">Kitui</option><option value="Machakos">Machakos</option><option value="Makueni">Makueni</option><option value="Nyandarua">Nyandarua</option><option value="Nyeri">Nyeri</option><option value="Kirinyaga">Kirinyaga</option><option value="Murang'a">Murang'a</option><option value="Kiambu">Kiambu</option><option value="Turkana">Turkana</option><option value="West Pokot">West Pokot</option><option value="Samburu">Samburu</option><option value="Trans Nzoia">Trans Nzoia</option><option value="Uasin Gishu">Uasin Gishu</option><option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option><option value="Nandi">Nandi</option><option value="Baringo">Baringo</option><option value="Laikipia">Laikipia</option><option value="Nakuru">Nakuru</option><option value="Narok">Narok</option><option value="Kajiado">Kajiado</option><option value="Kericho">Kericho</option><option value="Bomet">Bomet</option><option value="Kakamega">Kakamega</option><option value="Vihiga">Vihiga</option><option value="Bungoma">Bungoma</option><option value="Busia">Busia</option><option value="Siaya">Siaya</option><option value="Kisumu">Kisumu</option><option value="Homa Bay">Homa Bay</option><option value="Migori">Migori</option><option value="Kisii">Kisii</option><option value="Nyamira">Nyamira</option><option value="Nairobi">Nairobi</option>
+    </select>
+    <input type="number" id="minPrice" placeholder="Min KES" />
+    <input type="number" id="maxPrice" placeholder="Max KES" />
     <button onclick="loadListings()">Apply Filters</button>
   </div>
 </div>
-
 
 
 <h2>🏠 RealPlot Connect – View Properties</h2>
