@@ -403,6 +403,8 @@ else if (!hasValidStoredAccess) {
     },
     () => alert("Location access denied.")
   );
+
+
 function loadListings() {
   const filterType = document.getElementById("filterType").value;
   const filterLocation = document.getElementById("filterLocation").value;
@@ -420,8 +422,19 @@ function loadListings() {
 
     const sortedEntries = Object.entries(data).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
 
-    for (const [id, item] of sortedEntries) {
-      if (item.price < 100000 || item.price > 500000) continue; // Only 100k – 500k
+   for (const [id, item] of sortedEntries) {
+
+  // ✅ Only ACTIVE listings
+  const status = (item.status || "").toLowerCase().trim();
+  if (status !== "active") continue;
+
+  // ✅ Only verified within 30 days
+  const now = Date.now();
+  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+  const lastVerified = Number(item.lastConfirmed || item.timestamp);
+
+  if (!lastVerified || (now - lastVerified > THIRTY_DAYS)) continue;
+      if (item.price < 1000000 || item.price > 5000000) continue; // Only 100k – 500k
 
       const itemType = (item.type || "").toLowerCase().trim();
       const itemLocation = (item.location || "").toLowerCase().trim();
@@ -509,6 +522,9 @@ function loadListings() {
   });
 }
 
+ 
+
+ 
 function showMapForListing(destLat, destLng, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = "";
