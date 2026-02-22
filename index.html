@@ -217,6 +217,16 @@ ul.description {
     margin-top: 12px;
   }
 }
+
+ /* PROMO BLOCK BETWEEN ROWS */
+.promo-block {
+  grid-column: 1 / -1; /* span full width across both columns */
+  text-align: center;
+  padding: 15px 10px;
+  background: #f8fbff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
 </style>
 </head>
 <body>
@@ -465,9 +475,10 @@ function loadListings() {
       card.appendChild(details);
 
      listingsDiv.appendChild(card);
+// After every 4 LISTING CARDS (ignore promos)
+const listingCount = listingsDiv.querySelectorAll(".listing-card").length;
 
-// After every 4 cards (two rows in 2-column grid)
-if ((listingsDiv.children.length % 4) === 0) {
+if (listingCount % 4 === 0) {
   listingsDiv.appendChild(createPromoBlock());
 }
     }
