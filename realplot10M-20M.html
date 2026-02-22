@@ -189,6 +189,123 @@ ul.description {
   overflow-y: auto;
 }
 
+<style>
+/* =========================
+   GLOBAL
+========================= */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  background: #0056b3;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.card,
+.filters {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+/* =========================
+   LISTINGS GRID (2 columns)
+========================= */
+#listings {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  justify-items: center;
+}
+
+@media (max-width: 800px) {
+  #listings {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   LISTING CARD
+========================= */
+.listing-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 15px;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.listing-card:hover {
+  transform: translateY(-5px);
+}
+
+/* =========================
+   IMAGE COLUMN
+========================= */
+.image-column {
+  width: 100%;
+}
+
+.image-column img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.image-column img:hover {
+  transform: scale(1.02);
+}
+
+/* =========================
+   DETAILS COLUMN (bigger text)
+========================= */
+.card-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-details p {
+  margin: 6px 0;
+  font-size: 17px; /* ⬆ bigger text */
+}
+
+.card-details .bold-info {
+  font-weight: bold;
+  font-size: 18px; /* ⬆ bigger bold text */
+}
+
+/* =========================
+   DESCRIPTION BOX (bigger text)
+========================= */
+ul.description {
+  font-size: 22px; /* ⬆ bigger description text */
+  line-height: 1.6;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  max-height: 230px;
+  overflow-y: auto;
+}
+
 /* =========================
    BUTTONS
 ========================= */
@@ -259,7 +376,6 @@ ul.description {
   }
 }
 </style>
-
  
 </head>
 <body>
