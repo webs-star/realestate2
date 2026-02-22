@@ -402,6 +402,7 @@ else if (!hasValidStoredAccess) {
   );
 
 
+
 function loadListings() {
   const filterType = document.getElementById("filterType").value;
   const filterLocation = document.getElementById("filterLocation").value;
@@ -419,8 +420,19 @@ function loadListings() {
 
     const sortedEntries = Object.entries(data).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
 
-    for (const [id, item] of sortedEntries) {
-      if (item.price > 9999) continue; // ✅ Only < 10,000
+   for (const [id, item] of sortedEntries) {
+
+  // ✅ Only ACTIVE listings
+  const status = (item.status || "").toLowerCase().trim();
+  if (status !== "active") continue;
+
+  // ✅ Only verified within 30 days
+  const now = Date.now();
+  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+  const lastVerified = Number(item.lastConfirmed || item.timestamp);
+
+  if (!lastVerified || (now - lastVerified > THIRTY_DAYS)) continue;
+      if (item.price > 9999) continue; 
 
       const itemType = (item.type || "").toLowerCase().trim();
       const itemLocation = (item.location || "").toLowerCase().trim();
@@ -436,63 +448,81 @@ function loadListings() {
 
       if (!typeMatch || !purposeMatch || !locationMatch) continue;
 
-      // ✅ Render card (same as original)
+      const daysAgo = Math.floor((Date.now() - (item.lastConfirmed || item.timestamp || Date.now())) / (1000 * 60 * 60 * 24));
+
+      // CARD
       const card = document.createElement("div");
       card.className = "listing-card";
-      card.innerHTML = `
-        <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
-        <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
-        <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
-        <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
-        <ul class="description">
-          ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
-        </ul>
-        <p><strong>Contact:</strong> <span class="bold-info contact">${item.contact}</span></p>
-      `;
+
+      // IMAGE COLUMN
+      const imageColumn = document.createElement("div");
+      imageColumn.className = "image-column";
 
       const imageArray = Array.isArray(item.images) ? item.images : [];
       if (imageArray.length > 0) {
         const img = document.createElement("img");
         img.src = imageArray[0];
-        img.className = "property";
-        img.style.transition = "opacity 0.5s ease-in-out";
-        card.appendChild(img);
+        imageColumn.appendChild(img);
 
         let index = 0;
         setInterval(() => {
           index = (index + 1) % imageArray.length;
-          img.style.opacity = 0;
-          setTimeout(() => {
-            img.src = imageArray[index];
-            img.style.opacity = 1;
-          }, 500);
+          img.src = imageArray[index];
         }, 5000);
       }
 
-      const mapId = "map-" + id;
-      const btn = document.createElement("button");
-      btn.textContent = "📍 Show Directions";
-      btn.onclick = () => showMapForListing(item.lat, item.lng, mapId);
+      card.appendChild(imageColumn);
 
+      // DETAILS COLUMN
+      const details = document.createElement("div");
+      details.className = "card-details";
+
+      details.innerHTML = `
+        <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
+        <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
+        <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
+        <p><strong>Price:</strong> <span class="bold-info price">KES ${item.price}</span></p>
+
+        <p style="font-size:13px; color:#0aa83f;">
+          ✅ Available – Verified ${daysAgo} day(s) ago
+        </p>
+
+        <ul class="description">
+          ${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}
+        </ul>
+      `;
+
+      // CONTACT BUTTON (free)
       const chatBtn = document.createElement("button");
-      chatBtn.textContent = "💬 Chat with Landlord/Landowner/Agent";
-      chatBtn.style.background = "#ff9800";
+      chatBtn.textContent = "💬 Contact Owner (Free)";
+      chatBtn.style.background = "#0aa83f";
       chatBtn.style.color = "white";
-      chatBtn.style.marginTop = "5px";
-      chatBtn.style.borderRadius = "5px";
       chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
+
+      // MAP BUTTON (free directions)
+      const mapId = "map-" + id;
+      const mapBtn = document.createElement("button");
+      mapBtn.textContent = "📍 Open Live Map (Free Directions)";
+      mapBtn.style.background = "#0056b3";
+      mapBtn.style.color = "white";
+      mapBtn.onclick = () => showMapForListing(item.lat, item.lng, mapId);
 
       const mapDiv = document.createElement("div");
       mapDiv.id = mapId;
 
-      card.appendChild(btn);
-      card.appendChild(chatBtn);
-      card.appendChild(mapDiv);
+      details.appendChild(chatBtn);
+      details.appendChild(mapBtn);
+      details.appendChild(mapDiv);
+      card.appendChild(details);
+
       listingsDiv.appendChild(card);
     }
   });
 }
 
+
+  
+     
 
 
 function showMapForListing(destLat, destLng, containerId) {
