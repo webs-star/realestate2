@@ -294,6 +294,43 @@ ul.description {
 }
  
 
+
+
+
+
+
+.filters > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px; /* space between filters */
+  margin-top: 10px;
+}
+
+.filters select,
+.filters input,
+.filters button {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Optional: make inputs align nicely */
+.filters select,
+.filters input {
+  min-width: 150px;
+}
+
+.filters button {
+  background-color: #2c7be5;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.filters button:hover {
+  background-color: #1a68d1;
+}
    
   </style>
 </head>
