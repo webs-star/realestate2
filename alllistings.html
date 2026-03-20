@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ 
+ <meta name="google-site-verification" content="U5XTc52kcwPqUunl-p9uagUoK3-O9wwGZhr7G1fL2bo" />
+  <!-- Title and SEO -->
+<title>RealPlot Kenya – Find Plots, Houses & Rentals Near You</title>
+
+<meta name="description" content="Discover affordable plots, houses, and rentals across Kenya with RealPlot Connect. Use the live map to search by location, apply filters, and get real-time voice-guided directions to properties near you." />
+
+<meta name="keywords" content="plots for sale Kenya, houses for rent Kenya, cheap rentals Kenya, buy land Kenya, affordable property Kenya, real estate Kenya, rental listings Kenya, property map Kenya, Mtwapa plots, Nairobi rentals, land for sale Mombasa, apartments Kenya, homes for sale Kenya, RealPlot Connect" />
+
+<meta name="author" content="RealPlot Connect by Webs Star" />
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<link rel="canonical" href="https://webs-star.github.io/realestate.com/customers.html" />
+
+<!-- Open Graph / Social Preview -->
+<meta property="og:title" content="RealPlot Kenya – Explore Plots, Houses & Rentals Near You" />
+<meta property="og:description" content="Browse and find verified properties across Kenya. RealPlot Connect helps customers search, view, and navigate to land and rentals easily with voice-guided map access." />
+<meta property="og:url" content="https://webs-star.github.io/realestate.com/customers.html" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="en_KE" />
+<meta property="og:image" content="https://your-site-preview-image.jpg" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="RealPlot Kenya – Discover Plots, Rentals & Houses for Sale" />
+<meta name="twitter:description" content="Find affordable plots and rentals across Kenya using RealPlot’s live property map with filters and voice-guided directions." />
+<meta name="twitter:image" content="https://your-site-preview-image.jpg" />
+
+<!-- Geo Tags for Local SEO -->
+<meta name="geo.region" content="KE" />
+<meta name="geo.placename" content="Kenya" />
+<meta name="geo.position" content="-1.2921;36.8219" />
+<meta name="ICBM" content="-1.2921,36.8219" />
+
+<!-- Schema.org JSON-LD for Rich Search Results -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "RealPlot Connect – Property Finder Kenya",
+  "url": "https://webs-star.github.io/realestate.com/customers.html",
+  "description": "A free property finder tool in Kenya to discover plots, land, and rentals with map navigation and voice-guided directions.",
+  "applicationCategory": "RealEstateApplication",
+  "operatingSystem": "All",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Webs Star"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KES"
+  },
+  "areaServed": "KE",
+  "inLanguage": "en"
+}
+</script>
+
+<link rel="icon" href="favicon.ico" />
+
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
+
+
+  <style>
+    body { font-family: Arial; background: #f4f4f4; padding: 20px; }
+    h2 {
+      text-align: center;
+      background: #0056b3;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .card, .filters {
+      background: white; padding: 20px; border-radius: 8px;
+      box-shadow: 0 2px 6px #ccc; max-width: 800px; margin: 20px auto;
+    }
+    
+    img.property {
+      width: 100%; margin-bottom: 10px; border-radius: 10px;
+    }
+ 
+
+#listings {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.listing-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* IMAGE AREA = 3/4 height */
+.card-image {
+  width: 100%;
+  height: 280px;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* prevents cutting */
+}
+
+/* DETAILS AREA = remaining */
+.card-details {
+  padding: 10px;
+  font-size: 14px;
+  background: #fafafa;
+}
+
+.map-container {
+  width: 100%;
+  min-height: 320px; /* Change 'height' to 'min-height' */
+  height: auto;      /* Allow it to grow */
+  display: none;
+  margin-top: 10px;
+  border-radius: 8px;
+  overflow: visible; /* Ensure text isn't cut off */
+}
+
+/* MOBILE ONE COLUMN */
+@media (max-width: 900px) {
+  #listings {
+    grid-template-columns: 1fr;
+  }
+  .card-image {
+    height: 240px;
+  }
+
+
+  .card-image,
+  .card-details {
+    width: 100%;
+  }
+
+  .card-image {
+    height: 220px;
+  }
+}
+   
+
+.image-column {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.image-column img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.listing-card h4,
+.listing-card p {
+  margin: 2px 0;
+  padding: 0;
+  font-size: 14px;
+}
+
+ul.description {
+  background: #f0f0f0;
+  border-radius: 5px;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 6px 10px;
+  margin: 6px 0;
+  color: #000;
+
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.listing-card button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.edit-btn {
+  background: #28a745;
+  color: white;
+  margin-right: 6px;
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: white;
+}
+
+ 
+    .bold-info {
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+
+  .type    { color: #007BFF; }  /* Blue */
+  .purpose { color: #28A745; }  /* Green */
+  .location { color: #6F42C1; } /* Purple */
+  .price   { color: #DC3545; }  /* Red */
+  .contact { color: #FFC107; } /* Yellow/Orange */
+
+
+
+.listing-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.listing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+}
+
+
+
+
+
+/* =========================
+   MODERN FILTER STYLING
+========================= */
+
+.filters h3 {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 18px;
+  color: #0056b3;
+  font-weight: 600;
+}
+
+.filters select,
+.filters input {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  font-size: 15px;
+  background: #f9fafc;
+  transition: all 0.25s ease;
+  min-width: 150px;
+  outline: none;
+}
+
+.filters select:focus,
+.filters input:focus {
+  border-color: #0056b3;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.15);
+}
+
+.filters input::placeholder {
+  color: #888;
+}
+
+.filters button {
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #0056b3, #0aa83f);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.filters button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.filters button:active {
+  transform: scale(0.97);
+}
+ 
+
+   
+  </style>
+</head>
+<body>
+
+<div class="filters">
+  <h3>🔍 Filter Listings</h3>
+ <div>
+    <select id="filterType">
+      <option value="">All Types</option>
+      <option value="land">Land / Plots</option>
+      <option value="house">House</option>
+      <option value="apartment">Apartment / Flat</option>
+      <option value="bungalow">Bungalow</option>
+      <option value="maisonette">Maisonette</option>
+      <option value="bedsitter">Bedsitter</option>
+      <option value="single room">Single Room</option>
+      <option value="shop">Shop / Stall</option>
+      <option value="office">Office Space</option>
+      <option value="godown">Godown / Warehouse</option>
+      <option value="commercial building">Commercial Building</option>
+      <option value="leased">Leased Property</option>
+      <option value="rental">Rental Unit</option>
+      <option value="hostel">Student Hostel</option>
+      <option value="farm">Farm Land</option>
+      <option value="vacant land">Vacant Land</option>
+      <option value="industrial">Industrial Property</option>
+      <option value="resort">Resort / Hotel</option>
+    </select>
+    
+    
+<select id="filterPurpose">
+  <option value="">All Purposes</option>
+  <option value="sale">For Sale</option>
+  <option value="rent">For Rent</option>
+  <option value="lease">For Lease</option>
+  <option value="bnb">For BnB</option>
+</select>
+
+    
+    
+    <select id="filterLocation">
+      <option value="">All Counties</option>
+      <option value="Mombasa">Mombasa</option><option value="Kwale">Kwale</option><option value="Kilifi">Kilifi</option><option value="Tana River">Tana River</option><option value="Lamu">Lamu</option><option value="Taita-Taveta">Taita-Taveta</option><option value="Garissa">Garissa</option><option value="Wajir">Wajir</option><option value="Mandera">Mandera</option><option value="Marsabit">Marsabit</option><option value="Isiolo">Isiolo</option><option value="Meru">Meru</option><option value="Tharaka-Nithi">Tharaka-Nithi</option><option value="Embu">Embu</option><option value="Kitui">Kitui</option><option value="Machakos">Machakos</option><option value="Makueni">Makueni</option><option value="Nyandarua">Nyandarua</option><option value="Nyeri">Nyeri</option><option value="Kirinyaga">Kirinyaga</option><option value="Murang'a">Murang'a</option><option value="Kiambu">Kiambu</option><option value="Turkana">Turkana</option><option value="West Pokot">West Pokot</option><option value="Samburu">Samburu</option><option value="Trans Nzoia">Trans Nzoia</option><option value="Uasin Gishu">Uasin Gishu</option><option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option><option value="Nandi">Nandi</option><option value="Baringo">Baringo</option><option value="Laikipia">Laikipia</option><option value="Nakuru">Nakuru</option><option value="Narok">Narok</option><option value="Kajiado">Kajiado</option><option value="Kericho">Kericho</option><option value="Bomet">Bomet</option><option value="Kakamega">Kakamega</option><option value="Vihiga">Vihiga</option><option value="Bungoma">Bungoma</option><option value="Busia">Busia</option><option value="Siaya">Siaya</option><option value="Kisumu">Kisumu</option><option value="Homa Bay">Homa Bay</option><option value="Migori">Migori</option><option value="Kisii">Kisii</option><option value="Nyamira">Nyamira</option><option value="Nairobi">Nairobi</option>
+    </select>
+    <input type="number" id="minPrice" placeholder="Min KES" />
+    <input type="number" id="maxPrice" placeholder="Max KES" />
+    <button onclick="loadListings()">Apply Filters</button>
+  </div>
+</div>
+
+ 
+<h2>🏠 RealPlot Connect – View Properties</h2>
+<div id="listings"></div>
+
+<script>
+
+
+
+
+ 
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLTAd2u0IlhA4Gm4-0tTSzLUDHFYj045g",
+    authDomain: "realestate-afbe6.firebaseapp.com",
+    databaseURL: "https://realestate-afbe6-default-rtdb.firebaseio.com",
+    projectId: "realestate-afbe6",
+    storageBucket: "realestate-afbe6.appspot.com",
+    messagingSenderId: "202970291965",
+    appId: "1:202970291965:web:baaf253d6c9a8685c5e894"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  let currentUserLatLng = null;
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      currentUserLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude);
+    },
+    () => alert("Location access denied.")
+  );
+
+ 
+ 
+ 
+ 
+ 
+ function loadListings() {
+  const filterType = document.getElementById("filterType").value;
+  const filterLocation = document.getElementById("filterLocation").value;
+  const filterPurpose = document.getElementById("filterPurpose").value.toLowerCase().trim();
+
+  // 1. Fetch Boosted
+  db.ref("topListings").once("value", topSnapshot => {
+    const topData = topSnapshot.val() || {};
+
+    // 2. Fetch Regular
+    db.ref("listings").once("value", freeSnapshot => {
+      const freeData = freeSnapshot.val() || {};
+      const listingsDiv = document.getElementById("listings");
+      listingsDiv.innerHTML = "";
+
+      let combinedListings = [];
+
+      // Add Boosted (Priority 2)
+      Object.entries(topData).forEach(([id, item]) => {
+        combinedListings.push([id, { ...item, priority: 2 }]);
+      });
+
+      // Add Free (Priority 1)
+      Object.entries(freeData).forEach(([id, item]) => {
+        if (!topData[id]) {
+          combinedListings.push([id, { ...item, priority: 1 }]);
+        }
+      });
+
+      // 3. SORT: Priority first (2 > 1), then Timestamp
+      combinedListings.sort((a, b) => {
+        if (b[1].priority !== a[1].priority) {
+          return b[1].priority - a[1].priority; 
+        }
+        return (b[1].timestamp || 0) - (a[1].timestamp || 0);
+      });
+
+      if (combinedListings.length === 0) {
+        listingsDiv.innerHTML = "<p>No listings found.</p>";
+        return;
+      }
+
+      // 4. Rendering Loop
+      for (const [id, item] of combinedListings) {
+        const itemType = (item.type || "").toLowerCase().trim();
+        const itemLocation = (item.location || "").toLowerCase().trim();
+        const itemPurpose = (item.purpose || "").toLowerCase().trim();
+        const filterTypeVal = filterType.toLowerCase().trim();
+        const filterLoc = filterLocation.toLowerCase().trim();
+
+        const itemLocationWords = itemLocation.split(/[\s,-]+/);
+        const filterWords = filterLoc.split(/[\s,-]+/);
+
+        const locationMatch = filterLoc === "" || filterWords.some(word => itemLocationWords.includes(word));
+        const typeMatch = filterType === "" || itemType.includes(filterTypeVal);
+        const purposeMatch = filterPurpose === "" || itemPurpose === filterPurpose;
+
+        if (!typeMatch || !purposeMatch || !locationMatch) continue;
+
+        const card = document.createElement("div");
+        card.className = "listing-card";
+        
+        // --- HIGH CONTRAST STYLING FOR BOOSTED ---
+        if (item.priority === 2) {
+          card.style.border = "3px solid #FFD700"; // Thick Gold Border
+          card.style.background = "linear-gradient(180deg, #fffef0 0%, #ffffff 100%)"; // Subtle Golden Glow
+          card.style.boxShadow = "0px 8px 20px rgba(218, 165, 32, 0.4)"; // Deep shadow
+          card.style.position = "relative";
+          card.style.transform = "scale(1.02)"; // Slightly larger
+          card.style.zIndex = "10";
+        } else {
+          card.style.border = "1px solid #ddd"; // Simple grey border for free
+          card.style.opacity = "0.95"; // Very slight dimming for free
+        }
+
+        const imageDiv = document.createElement("div");
+        imageDiv.className = "card-image";
+        const detailsDiv = document.createElement("div");
+        detailsDiv.className = "card-details";
+
+        const imageArray = Array.isArray(item.images) ? item.images : [];
+        if (imageArray.length > 0) {
+          const img = document.createElement("img");
+          img.src = imageArray[0];
+          imageDiv.appendChild(img);
+          let index = 0;
+          if (imageArray.length > 1) {
+            setInterval(() => {
+              index = (index + 1) % imageArray.length;
+              img.style.opacity = 0;
+              setTimeout(() => { img.src = imageArray[index]; img.style.opacity = 1; }, 500);
+            }, 5000);
+          }
+        }
+
+        const daysAgo = Math.floor((Date.now() - (item.timestamp || 0)) / (1000 * 60 * 60 * 24));
+
+        // Adding a ribbon/badge for Boosted
+        const badge = item.priority === 2 
+          ? `<div style="position:absolute; top:10px; right:10px; background:#FFD700; color:#000; padding:5px 12px; font-weight:bold; border-radius:20px; font-size:12px; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); z-index:11;">⭐ FEATURED</div>` 
+          : "";
+
+        detailsDiv.innerHTML = `
+          ${badge}
+          <p><strong>Type:</strong> <span class="bold-info type">${item.type}</span></p>
+          <p><strong>Purpose:</strong> <span class="bold-info purpose">${item.purpose || "N/A"}</span></p>
+          <p><strong>Location:</strong> <span class="bold-info location">${item.location}</span></p>
+          <p><strong>Price:</strong> <span class="bold-info price" style="${item.priority === 2 ? 'color:#d4af37; font-size:1.2em;' : ''}">KES ${item.price}</span></p>
+          <p style="font-size:13px; color:#0aa83f;">✅ Available – Verified ${daysAgo} day(s) ago</p>
+          <ul class="description">${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}</ul>
+        `;
+
+        const chatBtn = document.createElement("button");
+        chatBtn.textContent = "💬 Contact the Owner or Agent";
+        chatBtn.style.background = "#25D366";
+        chatBtn.style.color = "white";
+        chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
+        detailsDiv.appendChild(chatBtn);
+
+        const mapId = "map-" + id;
+        const mapContainer = document.createElement("div");
+        mapContainer.id = mapId;
+        mapContainer.className = "map-container";
+
+        const mapBtn = document.createElement("button");
+        mapBtn.textContent = "📍 Show Live Directions";
+        mapBtn.style.background = "#0056b3";
+        mapBtn.style.color = "white";
+        mapBtn.onclick = () => {
+          if (mapContainer.style.display === "block") {
+            mapContainer.style.display = "none";
+          } else {
+            mapContainer.style.display = "block";
+            requestAnimationFrame(() => showMapForListing(item.lat, item.lng, mapId));
+          }
+        };
+
+        detailsDiv.appendChild(mapBtn);
+        card.appendChild(imageDiv);
+        card.appendChild(detailsDiv);
+        card.appendChild(mapContainer);
+        listingsDiv.appendChild(card);
+      }
+    });
+  });
+}
+ 
+ 
+ 
+ 
+ 
+
+function showMapForListing(destLat, destLng, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+
+    const mapDiv = document.createElement("div");
+    mapDiv.style.height = "300px";
+    mapDiv.style.marginTop = "10px";
+    mapDiv.style.borderRadius = "10px";
+    container.appendChild(mapDiv);
+
+    const directionsList = document.createElement("div");
+    directionsList.className = "directions-text";
+    directionsList.style.marginTop = "10px";
+    directionsList.style.padding = "10px";
+    directionsList.style.background = "#f9f9f9";
+    directionsList.style.borderRadius = "8px";
+    // ⭐ Initial message changed to show the long wait time
+    directionsList.innerHTML = "<strong>Directions:</strong><br><em>Acquiring location... (This may take up to 20 seconds on mobile data)</em>";
+    container.appendChild(directionsList);
+
+    const destinationLatLng = L.latLng(destLat, destLng);
+    
+    let map = null;
+    let userMarker = null;
+    let routeControl = null;
+    let straightLine = null;
+    
+    // --- STEP 1: Define the Routing Logic ---
+
+    function createRoute(userLatLng) {
+        // Cleanup previous layers
+        if (routeControl) { map.removeControl(routeControl); routeControl = null; }
+        if (straightLine) { map.removeLayer(straightLine); straightLine = null; }
+
+        directionsList.innerHTML = "<strong>Directions:</strong><br><em>Calculating best road route...</em>";
+
+        // Create the road routing control
+        routeControl = L.Routing.control({
+            waypoints: [userLatLng, destinationLatLng],
+            routeWhileDragging: false,
+            addWaypoints: false,
+            createMarker: () => null,
+            show: false,
+            lineOptions: {
+                styles: [{ color: 'blue', weight: 4, opacity: 0.8 }]
+            }
+        }).addTo(map);
+
+        // --- Routing Error Handler (The critical fallback) ---
+        routeControl.on('routingerror', function (e) {
+            console.error("Road Routing Error:", e.error);
+            
+            // Immediately trigger straight-line fallback on failure
+            straightLineFallback(userLatLng);
+        });
+
+        // --- Routing Success Handler ---
+        routeControl.on('routesfound', function (e) {
+            const route = e.routes[0];
+            const distanceKm = (route.summary.totalDistance / 1000).toFixed(2);
+            const timeMin = (route.summary.totalTime / 60).toFixed(0);
+
+            let steps = `<strong>Live Step-by-Step Directions:</strong><br>`;
+            const instructions = route.instructions || [];
+
+            const formatter = new L.Routing.Formatter();
+            if (instructions.length === 0 && route.instructions === undefined) {
+                route.instructions = formatter._getInstructions.call({options:{}}, route);
+            }
+
+            for (const step of route.instructions || []) {
+                if (step.text) {
+                    steps += `➡️ ${step.text} (${(step.distance / 1000).toFixed(2)} km)<br>`;
+                }
+            }
+
+            steps += `<br><em>Total Distance:</em> **${distanceKm} km**<br>`;
+            steps += `<em>Estimated Time:</em> **${timeMin} mins**`;
+
+            directionsList.innerHTML = steps;
+        });
+    }
+
+    function straightLineFallback(userLatLng) {
+        // Fallback cleanup (in case an error occurred mid-route draw)
+        if (routeControl) { map.removeControl(routeControl); routeControl = null; }
+        
+        const distanceToDestination = userLatLng.distanceTo(destinationLatLng);
+        
+        // Draw the straight line
+        straightLine = L.polyline([userLatLng, destinationLatLng], {
+            color: 'red', 
+            weight: 3, 
+            dashArray: '10, 10', 
+            opacity: 0.8
+        }).addTo(map);
+
+        directionsList.innerHTML = `
+            ❌ <strong>Road Route Failed!</strong><br>
+            Showing **Straight Line Distance:** **${(distanceToDestination / 1000).toFixed(2)} km** (${distanceToDestination.toFixed(0)}m)<br>
+            <em>This often happens due to a poor 3G/4G signal. You must navigate the rest of the way manually.</em>
+        `;
+    }
+
+    // --- STEP 2: Acquire Location (Using Single, Robust Request) ---
+
+    // We use getCurrentPosition instead of watchPosition for one stable fix.
+    navigator.geolocation.getCurrentPosition(
+        pos => {
+            const userLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude);
+            const accuracyMeters = pos.coords.accuracy;
+
+            // 1. Initialize the map now that we have a location
+            map = L.map(mapDiv).setView(userLatLng, 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            L.marker(destinationLatLng).addTo(map).bindPopup("Listing Location");
+
+            // 2. Add User Marker
+            userMarker = L.marker(userLatLng, {
+                icon: L.icon({
+                    iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+                    iconSize: [25, 25],
+                    iconAnchor: [12, 12]
+                })
+            }).addTo(map).bindPopup(`You are here (Accuracy: ${accuracyMeters.toFixed(0)}m)`);
+            
+            // 3. Immediately attempt road routing
+            createRoute(userLatLng);
+
+            // 4. Implement a simple watching logic for updates (optional but helpful)
+            // This re-attempts the route every 30 seconds if successful
+            setInterval(() => {
+                navigator.geolocation.getCurrentPosition(
+                    updatePos => {
+                        const updatedLatLng = L.latLng(updatePos.coords.latitude, updatePos.coords.longitude);
+                        userMarker.setLatLng(updatedLatLng).bindPopup(`Updated Location (Acc: ${updatePos.coords.accuracy.toFixed(0)}m)`);
+                        map.panTo(updatedLatLng);
+                        
+                        // Only re-route if accuracy is decent (e.g., < 150m) to avoid errors
+                        if (updatePos.coords.accuracy < 150) {
+                            createRoute(updatedLatLng);
+                        } else {
+                            straightLineFallback(updatedLatLng); // Fallback if update is poor
+                        }
+                    },
+                    () => { /* ignore update errors */ },
+                    { enableHighAccuracy: false, timeout: 10000 }
+                );
+            }, 30000); // Check for location update every 30 seconds
+
+        },
+        err => {
+            // Geolocation Failure (Failed to get location within 20s)
+            directionsList.innerHTML = `
+                ❌ <strong>Location Tracking Failed!</strong><br>
+                **Error:** ${err.message}. Failed to get position within 20 seconds.
+                <br><em>Please check if location services are enabled or try moving to an open area.</em>
+            `;
+        },
+        {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            // ⭐ Final attempt at a long timeout for 3G/4G
+            timeout: 20000 
+        }
+    );
+}
+window.onload = () => {
+  loadListings();
+};
+
+
+function openChat(contact, location, type, listingId) {
+  const message = prompt(`💬 Start chatting with the landlord of this ${type} in ${location}.\n\nType your message below:`);
+
+  if (!message) return;
+
+  const phoneNumber = contact.replace(/\D/g, '');
+
+  const linkToListing = `https://webs-star.github.io/realestate2/?listing=${listingId}`;
+
+  const preFilled = `Hello, I'm interested in the ${type} located in ${location}. I saw your listing on *RealPlot Connect*.\n\n${message}\n\n🔗 View listing: ${linkToListing}`;
+  const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(preFilled)}`;
+
+  window.open(whatsappURL, "_blank");
+}
+
+
+
+  
+</script>
+
+</body>
+</html>
