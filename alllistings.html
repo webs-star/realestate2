@@ -418,6 +418,13 @@ ul.description {
  
  
  
+
+
+
+
+
+ 
+ 
  
  function loadListings() {
   const filterType = document.getElementById("filterType").value;
@@ -531,40 +538,68 @@ ul.description {
           <ul class="description">${(item.description || "").split("\n").map(line => `<li>${line}</li>`).join("")}</ul>
         `;
 
-        const chatBtn = document.createElement("button");
-        chatBtn.textContent = "💬 Contact the Owner or Agent";
-        chatBtn.style.background = "#25D366";
-        chatBtn.style.color = "white";
-        chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
-        detailsDiv.appendChild(chatBtn);
+     const chatBtn = document.createElement("button");
+chatBtn.textContent = "💬 Contact the Owner or Agent";
+chatBtn.style.background = "#25D366";
+chatBtn.style.color = "white";
 
-        const mapId = "map-" + id;
-        const mapContainer = document.createElement("div");
-        mapContainer.id = mapId;
-        mapContainer.className = "map-container";
+// ✅ FIX WIDTH
+chatBtn.style.display = "inline-block";
+chatBtn.style.width = "fit-content";
+chatBtn.style.padding = "10px 15px";
 
-        const mapBtn = document.createElement("button");
-        mapBtn.textContent = "📍 Show Live Directions";
-        mapBtn.style.background = "#0056b3";
-        mapBtn.style.color = "white";
-        mapBtn.onclick = () => {
-          if (mapContainer.style.display === "block") {
-            mapContainer.style.display = "none";
-          } else {
-            mapContainer.style.display = "block";
-            requestAnimationFrame(() => showMapForListing(item.lat, item.lng, mapId));
-          }
-        };
+chatBtn.onclick = () => openChat(item.contact, item.location, item.type, id);
 
-        detailsDiv.appendChild(mapBtn);
-        card.appendChild(imageDiv);
-        card.appendChild(detailsDiv);
-        card.appendChild(mapContainer);
-        listingsDiv.appendChild(card);
+const mapId = "map-" + id;
+const mapContainer = document.createElement("div");
+mapContainer.id = mapId;
+mapContainer.className = "map-container";
+
+const mapBtn = document.createElement("button");
+mapBtn.textContent = "📍 Show Live Directions";
+mapBtn.style.background = "#0056b3";
+mapBtn.style.color = "white";
+
+// ✅ FIX WIDTH
+mapBtn.style.display = "inline-block";
+mapBtn.style.width = "fit-content";
+mapBtn.style.padding = "10px 15px";
+
+mapBtn.onclick = () => {
+  if (mapContainer.style.display === "block") {
+    mapContainer.style.display = "none";
+  } else {
+    mapContainer.style.display = "block";
+    requestAnimationFrame(() => showMapForListing(item.lat, item.lng, mapId));
+  }
+};
+
+// ✅ WRAPPER FOR SPACING + WIDTH CONTROL
+const btnWrapper = document.createElement("div");
+btnWrapper.style.display = "flex";
+btnWrapper.style.flexDirection = "column";
+btnWrapper.style.gap = "15px";
+btnWrapper.style.marginTop = "15px";
+btnWrapper.style.alignItems = "flex-start"; // 🔥 prevents stretching
+
+// ADD BUTTONS
+btnWrapper.appendChild(chatBtn);
+btnWrapper.appendChild(mapBtn);
+
+// ADD TO DETAILS
+detailsDiv.appendChild(btnWrapper);
+
+// CONTINUE NORMAL FLOW
+card.appendChild(imageDiv);
+card.appendChild(detailsDiv);
+card.appendChild(mapContainer);
+listingsDiv.appendChild(card);
       }
     });
   });
 }
+ 
+ 
  
  
  
